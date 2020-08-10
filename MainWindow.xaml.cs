@@ -24,7 +24,7 @@ namespace ExtremeEnviroment
         public MainWindow()
         {
             InitializeComponent();
-            InitLayout();
+            //InitLayout();
         }
 
         private void InitLayout()
