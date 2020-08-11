@@ -1,4 +1,5 @@
 ﻿using ExtremeEnviroment.Module.ImageList;
+using ExtremeEnviroment.Module.ImageView;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,10 +30,6 @@ namespace ExtremeEnviroment
 
         private void InitLayout()
         {
-            ImageListControl imageListControl = new ImageListControl();
-            
-            DockPanel.SetDock(imageListControl, Dock.Left);
-            mainPanel.Children.Add(imageListControl);
         }
     }
 }
