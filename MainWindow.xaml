@@ -9,26 +9,45 @@
         Title="MainWindow" Height="1050" Width="1680">
     <Grid x:Name="mainPanel">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-            <ColumnDefinition />
-            <ColumnDefinition />
-            <ColumnDefinition />
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="3*" MinHeight="100" MaxHeight="600"/>
         </Grid.RowDefinitions>
+        <GridSplitter HorizontalAlignment="Stretch" 
+                      VerticalAlignment="Center" 
+                      Grid.Row="3" 
+                      Grid.Column="0"
+                      Grid.ColumnSpan="5" 
+                      Background="DarkGray"
+                      ShowsPreview="True"
+                      Height="5">
+        </GridSplitter>
 
-        <ImageList:ImageListControl x:Name="ImageList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" />
-        <ImageView:ImageViewControl x:Name="ImageViewer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2" />
-        <Grid x:Name="TemperSelect" Grid.Column="3" Grid.Row="0" />
-        <ListBox x:Name="TemperResult" Grid.Column="3" Grid.Row="1" />
-        <ContentControl x:Name="MapViewer" Content="ContentControl" Grid.Column="4" Grid.Row="0"/>
-        <TextBox x:Name="ImageInfo" Grid.Column="4" Grid.Row="1" />
-        <DataGrid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"/>
-        <ContentControl Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="2"/>
-        <Button Grid.Column="4" Grid.Row="2" Content="결과 저장"/>
+        <Menu Height="25" Grid.Row="0" Grid.ColumnSpan="5">
+            <MenuItem Header="파일">
+                <MenuItem Header="새로만들기">
+                    <MenuItem Header="새로만들기1"></MenuItem>
+                    <MenuItem Header="새로만들기2"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="열기"/>
+                <MenuItem Header="저장"/>
+                <MenuItem Header="다른이름으로 저장"/>
+                <Separator />
+                <MenuItem Header="종료"/>
+            </MenuItem>
+        </Menu>
+
+        <ImageList:ImageListControl x:Name="ImageList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" />
+        <ImageView:ImageViewControl x:Name="ImageViewer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="2" />
+        <Button Grid.Column="4" Grid.Row="4" Content="결과 저장"/>
     </Grid>
 </Window>
