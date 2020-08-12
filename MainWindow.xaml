@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ExtremeEnviroment"
-        xmlns:ImageList="clr-namespace:ExtremeEnviroment.Module.ImageList" xmlns:ImageView="clr-namespace:ExtremeEnviroment.Module.ImageView" x:Class="ExtremeEnviroment.MainWindow"
+        xmlns:ImageList="clr-namespace:ExtremeEnviroment.Module.ImageList" xmlns:ImageView="clr-namespace:ExtremeEnviroment.Module.ImageView" xmlns:ImageInspector="clr-namespace:ExtremeEnviroment.Module.ImageInspector" x:Class="ExtremeEnviroment.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="1050" Width="1680">
     <Grid x:Name="mainPanel">
@@ -29,14 +29,13 @@
                       Grid.ColumnSpan="5" 
                       Background="DarkGray"
                       ShowsPreview="True"
-                      Height="5">
-        </GridSplitter>
+                      Height="5"/>
 
         <Menu Height="25" Grid.Row="0" Grid.ColumnSpan="5">
             <MenuItem Header="파일">
                 <MenuItem Header="새로만들기">
-                    <MenuItem Header="새로만들기1"></MenuItem>
-                    <MenuItem Header="새로만들기2"></MenuItem>
+                    <MenuItem Header="새로만들기1"/>
+                    <MenuItem Header="새로만들기2"/>
                 </MenuItem>
                 <MenuItem Header="열기"/>
                 <MenuItem Header="저장"/>
@@ -48,6 +47,8 @@
 
         <ImageList:ImageListControl x:Name="ImageList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" />
         <ImageView:ImageViewControl x:Name="ImageViewer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="2" />
+        <ImageInspector:ImageInspectorControl x:Name="ImageInspector" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="1" Grid.RowSpan="2" />
         <Button Grid.Column="4" Grid.Row="4" Content="결과 저장"/>
+        
     </Grid>
 </Window>
