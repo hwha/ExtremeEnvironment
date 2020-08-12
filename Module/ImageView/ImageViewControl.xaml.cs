@@ -39,7 +39,7 @@ namespace ExtremeEnviroment.Module.ImageView
 
         private void imageCanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if(e.ButtonState == MouseButtonState.Pressed)
+            if(e.LeftButton == MouseButtonState.Pressed)
             {
                 this.startPoint = e.GetPosition(this);
 
@@ -72,6 +72,10 @@ namespace ExtremeEnviroment.Module.ImageView
 
                 Canvas.SetLeft(this.rectangle, x);
                 Canvas.SetTop(this.rectangle, y);
+            }
+            else
+            {
+                imageCanvas.Children.Remove(this.rectangle);
             }
 
         }
