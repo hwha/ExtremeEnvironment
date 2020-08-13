@@ -16,9 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Module\MapView\mapViewer.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
     <Resource Include="Resources\images.jpg" />
   </ItemGroup>
 
