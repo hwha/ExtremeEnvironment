@@ -6,5 +6,7 @@
              xmlns:local="clr-namespace:ExtremeEnviroment.Module.ImageList"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <TreeView Name="ImageTree"></TreeView>
+    <GroupBox x:Name="imageList" Header="이미지 탐색기" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <TreeView Name="ImageTree"></TreeView>
+    </GroupBox>
 </UserControl>
