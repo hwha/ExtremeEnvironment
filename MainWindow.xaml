@@ -11,7 +11,7 @@
         xmlns:ChartView="clr-namespace:ExtremeEnviroment.Module.ChartView"
         x:Class="ExtremeEnviroment.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1050" Width="1680">
+        Title="MainWindow" Height="900" Width="1600">
     <Grid x:Name="mainPanel">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
