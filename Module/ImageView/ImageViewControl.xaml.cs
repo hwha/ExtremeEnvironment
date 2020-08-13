@@ -32,7 +32,7 @@ namespace ExtremeEnviroment.Module.ImageView
             // load imagesource
             BitmapImage bitmapImage = new BitmapImage();
             bitmapImage.BeginInit();
-            bitmapImage.UriSource = new Uri("pack://application:,,/Resources/images.jpg");
+            bitmapImage.UriSource = new Uri("pack://application:,,/Resources/sample_image.jpg");
             bitmapImage.EndInit();
             this.bgImage.Source = bitmapImage;
         }
