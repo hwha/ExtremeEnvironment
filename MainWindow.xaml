@@ -8,6 +8,7 @@
         xmlns:ImageView="clr-namespace:ExtremeEnviroment.Module.ImageView"
         xmlns:ImageInspector="clr-namespace:ExtremeEnviroment.Module.ImageInspector"
         xmlns:MapView="clr-namespace:ExtremeEnviroment.Module.MapView"
+        xmlns:ChartView="clr-namespace:ExtremeEnviroment.Module.ChartView"
         x:Class="ExtremeEnviroment.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="1050" Width="1680">
@@ -54,6 +55,7 @@
         <ImageInspector:ImageInspectorControl x:Name="ImageInspector" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="1" Grid.RowSpan="2" />
         <MapView:MapViewControl x:Name="MapViewer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="4" Grid.Row="1" />
         <Button Grid.Column="4" Grid.Row="4" Content="결과 저장"/>
-        
+        <ChartView:ChartViewControl  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="4"  />
+
     </Grid>
 </Window>
