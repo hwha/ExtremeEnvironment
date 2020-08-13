@@ -13,6 +13,7 @@
   <ItemGroup>
     <PackageReference Include="GMap.NET.Core" Version="2.0.1" />
     <PackageReference Include="GMap.NET.WinPresentation" Version="2.0.1" />
+    <PackageReference Include="LiveCharts.Wpf.NetCore3" Version="0.9.7" />
   </ItemGroup>
 
   <ItemGroup>
