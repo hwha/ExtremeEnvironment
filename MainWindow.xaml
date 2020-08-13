@@ -4,7 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ExtremeEnviroment"
-        xmlns:ImageList="clr-namespace:ExtremeEnviroment.Module.ImageList" xmlns:ImageView="clr-namespace:ExtremeEnviroment.Module.ImageView" xmlns:ImageInspector="clr-namespace:ExtremeEnviroment.Module.ImageInspector" x:Class="ExtremeEnviroment.MainWindow"
+        xmlns:ImageList="clr-namespace:ExtremeEnviroment.Module.ImageList"
+        xmlns:ImageView="clr-namespace:ExtremeEnviroment.Module.ImageView"
+        xmlns:ImageInspector="clr-namespace:ExtremeEnviroment.Module.ImageInspector"
+        xmlns:MapView="clr-namespace:ExtremeEnviroment.Module.MapView"
+        x:Class="ExtremeEnviroment.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="1050" Width="1680">
     <Grid x:Name="mainPanel">
@@ -48,6 +52,7 @@
         <ImageList:ImageListControl x:Name="ImageList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" />
         <ImageView:ImageViewControl x:Name="ImageViewer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="2" />
         <ImageInspector:ImageInspectorControl x:Name="ImageInspector" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="1" Grid.RowSpan="2" />
+        <MapView:MapViewControl x:Name="MapViewer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="4" Grid.Row="1" />
         <Button Grid.Column="4" Grid.Row="4" Content="결과 저장"/>
         
     </Grid>
