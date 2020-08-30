@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -84,7 +85,7 @@ namespace ExtremeEnviroment.Module.ImageList
                 textBlock.Inlines.Add(iconImage);
                 textBlock.Inlines.Add(itemName);
             }
-            
+
 
             TreeViewItem treeViewItem = new TreeViewItem
             {
@@ -92,6 +93,46 @@ namespace ExtremeEnviroment.Module.ImageList
             };
 
             return treeViewItem;
+        }
+
+        private void OnTreeViewItemDoubleClick(object sender, RoutedEventArgs e)
+        {
+            TreeViewItem selectedItem = this.ImageTree.SelectedItem as TreeViewItem;
+
+            if (selectedItem != null)
+            {
+                TextBlock textBlock = selectedItem.Header as TextBlock;
+                MessageBox.Show(textBlock.Text);
+            }
+        }
+
+        private void btnAddItem_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Multiselect = true;
+            openFileDialog.Filter = "BMP|*.bmp|GIF|*.gif|JPG|*.jpg;*.jpeg|PNG|*.png|TIFF|*.tif;*.tiff|All files(*.*)|*.*";
+
+            Nullable<bool> result = openFileDialog.ShowDialog();
+            if (result == true)
+            {
+                string[] fileNames = openFileDialog.FileNames;
+                foreach (string fileName in fileNames)
+                {
+                    MessageBox.Show(fileName);
+                    this.AddImageToTreeView(fileName);
+                }
+            }
+        }
+
+        public void AddImageToTreeView(string imagePath)
+        {
+
+        }
+
+
+        private void btnRemoveItem_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
