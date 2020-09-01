@@ -24,10 +24,6 @@ namespace ExtremeEnviroment.Module.ImageList
         public ImageListControl()
         {
             InitializeComponent();
-            InitControl();
-        }
-        void InitControl()
-        {
         }
 
         public void AddItem(TreeViewItem treeViewItem)
@@ -35,55 +31,41 @@ namespace ExtremeEnviroment.Module.ImageList
             ImageTree.Items.Add(treeViewItem);
         }
 
-        public BitmapImage GetSelectedItem()
-        {
-            BitmapImage imageSource = null;
-            TreeViewItem selectedItem = (TreeViewItem)this.ImageTree.SelectedItem;
-
-            if (selectedItem != null)
-            {
-                TextBlock textBlock = (TextBlock)selectedItem.Header;
-                Image thumnailImage = (Image)((InlineUIContainer)textBlock.Inlines.FirstInline).Child;
-                imageSource = (BitmapImage)thumnailImage.Source;
-            }
-            return imageSource;
-        }
-
-        private void OnTreeViewItemDoubleClick(object sender, RoutedEventArgs e)
-        {
-            BitmapImage bitmapImage = this.GetSelectedItem();
-            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(bitmapImage.UriSource.AbsolutePath);
-            MessageBox.Show(fileNameWithoutExtension);
-        }
-
-        public void AddImageToTreeView(string imagePath)
+        public void AddItem(string imagePath)
         {
             BitmapImage bitmapImage = this.GetLocalImage(imagePath);
             this.AddItem(this.CreateTreeItem(bitmapImage));
         }
 
-        private void btnAddItem_Click(object sender, RoutedEventArgs e)
+        public TreeViewItem SelectedItem
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog()
+            get
             {
-                Multiselect = true,
-                Filter = "BMP|*.bmp|GIF|*.gif|JPG|*.jpg;*.jpeg|PNG|*.png|TIFF|*.tif;*.tiff|All files(*.*)|*.*"
-            };
-
-            Nullable<bool> result = openFileDialog.ShowDialog();
-            if (result == true)
-            {
-                string[] fileNames = openFileDialog.FileNames;
-                foreach (string fileName in fileNames)
+                object selectedItem = this.ImageTree.SelectedItem;
+                if (selectedItem == null)
                 {
-                    this.AddImageToTreeView(fileName);
+                    return null;
                 }
+
+                return (TreeViewItem)selectedItem;
             }
         }
 
-        private void btnRemoveItem_Click(object sender, RoutedEventArgs e)
+        public BitmapImage SelectedItemImage
         {
+            get
+            {
+                BitmapImage imageSource = null;
+                TreeViewItem selectedItem = this.SelectedItem;
 
+                if (selectedItem != null)
+                {
+                    TextBlock textBlock = (TextBlock)selectedItem.Header;
+                    Image thumnailImage = (Image)((InlineUIContainer)textBlock.Inlines.FirstInline).Child;
+                    imageSource = (BitmapImage)thumnailImage.Source;
+                }
+                return imageSource;
+            }
         }
 
         private TreeViewItem CreateTreeItem(BitmapImage bitmapImage)
@@ -127,6 +109,39 @@ namespace ExtremeEnviroment.Module.ImageList
                 throw e;
             }
             return bitmapImage;
+
+        }
+
+        // Tree DoubleClick Handler
+        private void OnTreeViewItemDoubleClick(object sender, RoutedEventArgs e)
+        {
+            BitmapImage bitmapImage = this.SelectedItemImage;
+            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(bitmapImage.UriSource.AbsolutePath);
+        }
+
+        // Add Button Handler
+        private void btnAddItem_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog()
+            {
+                Multiselect = true,
+                Filter = "BMP|*.bmp|GIF|*.gif|JPG|*.jpg;*.jpeg|PNG|*.png|TIFF|*.tif;*.tiff|All files(*.*)|*.*"
+            };
+
+            Nullable<bool> result = openFileDialog.ShowDialog();
+            if (result == true)
+            {
+                string[] fileNames = openFileDialog.FileNames;
+                foreach (string fileName in fileNames)
+                {
+                    this.AddItem(fileName);
+                }
+            }
+        }
+        // Remove Button Handler
+        private void btnRemoveItem_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
