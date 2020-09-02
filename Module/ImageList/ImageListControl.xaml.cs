@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -11,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Path = System.IO.Path;
 
 namespace ExtremeEnviroment.Module.ImageList
 {
@@ -22,20 +24,6 @@ namespace ExtremeEnviroment.Module.ImageList
         public ImageListControl()
         {
             InitializeComponent();
-            InitControl();
-        }
-        void InitControl()
-        {
-            this.AddItem(this.GetTestItem());
-        }
-
-        private TreeViewItem GetTestItem()
-        {
-            TreeViewItem treeViewItem = this.CreateItem("Root", "images.jpg");
-            treeViewItem.Items.Add(this.CreateItem("CHILD1"));
-            treeViewItem.Items.Add(this.CreateItem("CHILD2"));
-            treeViewItem.Items.Add(this.CreateItem("CHILD3"));
-            return treeViewItem;
         }
 
         public void AddItem(TreeViewItem treeViewItem)
@@ -43,36 +31,51 @@ namespace ExtremeEnviroment.Module.ImageList
             ImageTree.Items.Add(treeViewItem);
         }
 
-        private TreeViewItem CreateItem(string itemName)
+        public void AddItem(string imagePath)
         {
-            return CreateItem(itemName, null);
+            BitmapImage bitmapImage = this.GetLocalImage(imagePath);
+            this.AddItem(this.CreateTreeItem(bitmapImage));
         }
 
-        private TreeViewItem CreateItem(string itemName, string imagePath)
+        public TreeViewItem SelectedItem
         {
-            TextBlock textBlock = new TextBlock();
-
-            if (imagePath == null)
+            get
             {
-                textBlock.Inlines.Add(itemName);
+                object selectedItem = this.ImageTree.SelectedItem;
+                if (selectedItem == null)
+                {
+                    return null;
+                }
+
+                return (TreeViewItem)selectedItem;
             }
-            else
-            {
-                // load imagesource
-                BitmapImage bitmapImage = new BitmapImage();
-                try
-                {
-                    bitmapImage.BeginInit();
-                    bitmapImage.UriSource = new Uri("pack://application:,,/Resources/" + imagePath);
-                    bitmapImage.EndInit();
-                }
-                catch (IOException e)
-                {
-                    if (e.Source != null)
-                        Console.WriteLine("IOException source: {0}", e.Source);
-                }
+        }
 
-                // set imagesource
+        public BitmapImage SelectedItemImage
+        {
+            get
+            {
+                BitmapImage imageSource = null;
+                TreeViewItem selectedItem = this.SelectedItem;
+
+                if (selectedItem != null)
+                {
+                    TextBlock textBlock = (TextBlock)selectedItem.Header;
+                    Image thumnailImage = (Image)((InlineUIContainer)textBlock.Inlines.FirstInline).Child;
+                    imageSource = (BitmapImage)thumnailImage.Source;
+                }
+                return imageSource;
+            }
+        }
+
+        private TreeViewItem CreateTreeItem(BitmapImage bitmapImage)
+        {
+            TreeViewItem treeViewItem = null;
+            if (bitmapImage != null)
+            {
+                treeViewItem = new TreeViewItem();
+                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(bitmapImage.UriSource.AbsolutePath);
+
                 Image iconImage = new Image
                 {
                     Source = bitmapImage,
@@ -80,18 +83,65 @@ namespace ExtremeEnviroment.Module.ImageList
                     Height = 16
                 };
 
-                // create item textblock
+                TextBlock textBlock = new TextBlock();
                 textBlock.Inlines.Add(iconImage);
-                textBlock.Inlines.Add(itemName);
-            }
-            
+                textBlock.Inlines.Add(fileNameWithoutExtension);
 
-            TreeViewItem treeViewItem = new TreeViewItem
-            {
-                Header = textBlock
-            };
+                treeViewItem.Header = textBlock;
+            }
 
             return treeViewItem;
+        }
+
+        private BitmapImage GetLocalImage(string imagePath)
+        {
+            BitmapImage bitmapImage = new BitmapImage();
+            try
+            {
+                bitmapImage.BeginInit();
+                bitmapImage.UriSource = new Uri(imagePath, UriKind.Absolute);
+                bitmapImage.EndInit();
+            }
+            catch (IOException e)
+            {
+                if (e.Source != null)
+                    Console.WriteLine("IOException source: {0}", e.Source);
+                throw e;
+            }
+            return bitmapImage;
+
+        }
+
+        // Tree DoubleClick Handler
+        private void OnTreeViewItemDoubleClick(object sender, RoutedEventArgs e)
+        {
+            BitmapImage bitmapImage = this.SelectedItemImage;
+            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(bitmapImage.UriSource.AbsolutePath);
+        }
+
+        // Add Button Handler
+        private void btnAddItem_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog()
+            {
+                Multiselect = true,
+                Filter = "BMP|*.bmp|GIF|*.gif|JPG|*.jpg;*.jpeg|PNG|*.png|TIFF|*.tif;*.tiff|All files(*.*)|*.*"
+            };
+
+            Nullable<bool> result = openFileDialog.ShowDialog();
+            if (result == true)
+            {
+                string[] fileNames = openFileDialog.FileNames;
+                foreach (string fileName in fileNames)
+                {
+                    this.AddItem(fileName);
+                }
+            }
+        }
+        // Remove Button Handler
+        private void btnRemoveItem_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -5,8 +5,20 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ExtremeEnviroment.Module.ImageList"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <GroupBox x:Name="imageList" Header="이미지 탐색기" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <TreeView Name="ImageTree"></TreeView>
-    </GroupBox>
+             d:DesignHeight="550" d:DesignWidth="800">
+    <StackPanel Orientation="Vertical">
+        <GroupBox x:Name="imageList" Header="이미지 탐색기" HorizontalAlignment="Stretch"  DockPanel.Dock="Top">
+            <TreeView x:Name="ImageTree" MinHeight="500">
+                <TreeView.ItemContainerStyle>
+                    <Style TargetType="{x:Type TreeViewItem}">
+                        <EventSetter Event="MouseDoubleClick" Handler="OnTreeViewItemDoubleClick"/>
+                    </Style>
+                </TreeView.ItemContainerStyle>
+            </TreeView>
+        </GroupBox>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" MinHeight="25">
+            <Button x:Name="btnAddItem" Width="50" Margin="10 2 0 2" Content="+" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="btnAddItem_Click"></Button>
+            <Button x:Name="btnRemoveItem" Width="50" Margin="5 2 0 2" Content="-" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="btnRemoveItem_Click"></Button>
+        </StackPanel>
+    </StackPanel>
 </UserControl>
