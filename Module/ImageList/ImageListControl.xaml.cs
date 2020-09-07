@@ -141,7 +141,12 @@ namespace ExtremeEnviroment.Module.ImageList
         // Remove Button Handler
         private void btnRemoveItem_Click(object sender, RoutedEventArgs e)
         {
-
+            if (this.SelectedItem != null)
+            {
+                this.ImageTree.Items.Remove(this.SelectedItem);
+                // TODO: 삭제되는 아이템이랑 연결된 컨트롤도 초기화 필요
+            }
         }
     }
 }
+
