@@ -88,6 +88,8 @@ namespace ExtremeEnviroment.Module.ImageList
                 textBlock.Inlines.Add(fileNameWithoutExtension);
 
                 treeViewItem.Header = textBlock;
+
+                treeViewItem.Items.Add(new TreeViewItem());
             }
 
             return treeViewItem;
