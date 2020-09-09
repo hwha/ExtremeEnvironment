@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Path = System.IO.Path;
+using ExtremeEnviroment.Module.ImageView;
 
 namespace ExtremeEnviroment.Module.ImageList
 {
@@ -136,11 +137,13 @@ namespace ExtremeEnviroment.Module.ImageList
         private void OnTreeViewItemDoubleClick(object sender, RoutedEventArgs e)
         {
             BitmapImage bitmapImage = this.SelectedItemImage;
-            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(bitmapImage.UriSource.AbsolutePath);
+            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+            ImageViewControl imageViewControl = mainWindow.GetImageViewControl();
+            imageViewControl.SetImageSource(bitmapImage);
         }
 
         // Add Button Handler
-        private void btnAddItem_Click(object sender, RoutedEventArgs e)
+        private void BtnAddItem_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog()
             {
@@ -159,7 +162,7 @@ namespace ExtremeEnviroment.Module.ImageList
             }
         }
         // Remove Button Handler
-        private void btnRemoveItem_Click(object sender, RoutedEventArgs e)
+        private void BtnRemoveItem_Click(object sender, RoutedEventArgs e)
         {
             if (this.SelectedItem != null)
             {

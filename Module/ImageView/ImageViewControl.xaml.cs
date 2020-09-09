@@ -26,7 +26,10 @@ namespace ExtremeEnviroment.Module.ImageView
             InitializeComponent();
             InitControl();
         }
-
+        public void SetImageSource(BitmapImage bitmapImage)
+        {
+            this.bgImage.Source = bitmapImage;
+        }
         private void InitControl()
         {
             // load imagesource
@@ -37,7 +40,7 @@ namespace ExtremeEnviroment.Module.ImageView
             this.bgImage.Source = bitmapImage;
         }
 
-        private void imageCanvas_MouseDown(object sender, MouseButtonEventArgs e)
+        private void ImageCanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if(e.LeftButton == MouseButtonState.Pressed)
             {
@@ -55,7 +58,7 @@ namespace ExtremeEnviroment.Module.ImageView
             }
         }
 
-        private void imageCanvas_MouseMove(object sender, MouseEventArgs e)
+        private void ImageCanvas_MouseMove(object sender, MouseEventArgs e)
         {
             if(e.LeftButton == MouseButtonState.Pressed)
             {
