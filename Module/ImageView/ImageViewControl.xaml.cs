@@ -24,19 +24,9 @@ namespace ExtremeEnviroment.Module.ImageView
         public ImageViewControl()
         {
             InitializeComponent();
-            InitControl();
         }
         public void SetImageSource(BitmapImage bitmapImage)
         {
-            this.bgImage.Source = bitmapImage;
-        }
-        private void InitControl()
-        {
-            // load imagesource
-            BitmapImage bitmapImage = new BitmapImage();
-            bitmapImage.BeginInit();
-            bitmapImage.UriSource = new Uri("pack://application:,,/Resources/sample_image.jpg");
-            bitmapImage.EndInit();
             this.bgImage.Source = bitmapImage;
         }
 

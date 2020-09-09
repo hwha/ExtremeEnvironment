@@ -60,8 +60,8 @@ namespace ExtremeEnviroment.Module.ImageList
             {
                 BitmapImage imageSource = null;
                 TreeViewItem selectedItem = this.SelectedItem;
-
-                if (selectedItem != null)
+                
+                if (selectedItem != null && selectedItem.Header is TextBlock)
                 {
                     TextBlock textBlock = (TextBlock)selectedItem.Header;
                     Image thumnailImage = (Image)((InlineUIContainer)textBlock.Inlines.FirstInline).Child;
@@ -137,9 +137,13 @@ namespace ExtremeEnviroment.Module.ImageList
         private void OnTreeViewItemDoubleClick(object sender, RoutedEventArgs e)
         {
             BitmapImage bitmapImage = this.SelectedItemImage;
-            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-            ImageViewControl imageViewControl = mainWindow.GetImageViewControl();
-            imageViewControl.SetImageSource(bitmapImage);
+            if(bitmapImage != null)
+            {
+                MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+                // set imageview
+                ImageViewControl imageViewControl = mainWindow.GetImageViewControl();
+                imageViewControl.SetImageSource(bitmapImage);
+            }
         }
 
         // Add Button Handler
