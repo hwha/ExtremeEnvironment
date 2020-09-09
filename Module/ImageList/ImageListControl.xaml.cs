@@ -1,4 +1,6 @@
-﻿using Microsoft.Win32;
+﻿using MetadataExtractor;
+using Directory = MetadataExtractor.Directory;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -70,11 +72,12 @@ namespace ExtremeEnviroment.Module.ImageList
 
         private TreeViewItem CreateTreeItem(BitmapImage bitmapImage)
         {
-            TreeViewItem treeViewItem = null;
+            TreeViewItem imageTreeViewItem = null;
             if (bitmapImage != null)
             {
-                treeViewItem = new TreeViewItem();
-                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(bitmapImage.UriSource.AbsolutePath);
+                imageTreeViewItem = new TreeViewItem();
+                string imageAbsolutePath = bitmapImage.UriSource.AbsolutePath;
+                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(imageAbsolutePath);
 
                 Image iconImage = new Image
                 {
@@ -87,10 +90,27 @@ namespace ExtremeEnviroment.Module.ImageList
                 textBlock.Inlines.Add(iconImage);
                 textBlock.Inlines.Add(fileNameWithoutExtension);
 
-                treeViewItem.Header = textBlock;
+                imageTreeViewItem.Header = textBlock;
+
+                // append metadata tree
+                this.AppendMetadataToTreeItem(imageTreeViewItem, this.GetImageMetadata(imageAbsolutePath));
             }
 
-            return treeViewItem;
+            return imageTreeViewItem;
+        }
+
+        private Dictionary<string, string> GetImageMetadata(string filePath)
+        {
+            Dictionary<string, string> metadataMap = new Dictionary<string, string>();
+            IReadOnlyList<Directory> readOnlyLists = ImageMetadataReader.ReadMetadata(filePath);
+            foreach (var dir in readOnlyLists)
+            {
+                foreach (var tag in dir.Tags)
+                {
+                    metadataMap.Add($"{tag.Name}", $"{tag.Description}");
+                }
+            }
+            return metadataMap;
         }
 
         private BitmapImage GetLocalImage(string imagePath)
@@ -125,7 +145,7 @@ namespace ExtremeEnviroment.Module.ImageList
             OpenFileDialog openFileDialog = new OpenFileDialog()
             {
                 Multiselect = true,
-                Filter = "BMP|*.bmp|GIF|*.gif|JPG|*.jpg;*.jpeg|PNG|*.png|TIFF|*.tif;*.tiff|All files(*.*)|*.*"
+                Filter = "Image Files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;*.tif;*.tiff|All files(*.*)|*.*"
             };
 
             Nullable<bool> result = openFileDialog.ShowDialog();
@@ -145,6 +165,20 @@ namespace ExtremeEnviroment.Module.ImageList
             {
                 this.ImageTree.Items.Remove(this.SelectedItem);
                 // TODO: 삭제되는 아이템이랑 연결된 컨트롤도 초기화 필요
+            }
+        }
+
+        private void AppendMetadataToTreeItem(TreeViewItem treeViewItem, Dictionary<string, string> metadataMap)
+        {
+            if (treeViewItem != null)
+            {
+                foreach (KeyValuePair<string, string> keyValuePair in metadataMap)
+                {
+                    if (keyValuePair.Key.IndexOf("Unknown tag") < 0)
+                    {
+                        treeViewItem.Items.Add(new TreeViewItem { Header = $"[{keyValuePair.Key}]{keyValuePair.Value}" });
+                    }
+                }
             }
         }
     }
