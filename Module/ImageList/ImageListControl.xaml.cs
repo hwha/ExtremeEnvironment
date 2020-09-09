@@ -61,9 +61,8 @@ namespace ExtremeEnviroment.Module.ImageList
                 BitmapImage imageSource = null;
                 TreeViewItem selectedItem = this.SelectedItem;
                 
-                if (selectedItem != null && selectedItem.Header is TextBlock)
+                if (selectedItem != null && selectedItem.Header is TextBlock textBlock)
                 {
-                    TextBlock textBlock = (TextBlock)selectedItem.Header;
                     Image thumnailImage = (Image)((InlineUIContainer)textBlock.Inlines.FirstInline).Child;
                     imageSource = (BitmapImage)thumnailImage.Source;
                 }
