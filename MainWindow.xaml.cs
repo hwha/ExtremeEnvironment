@@ -25,11 +25,11 @@ namespace ExtremeEnviroment
         public MainWindow()
         {
             InitializeComponent();
-            //InitLayout();
         }
 
-        private void InitLayout()
+        internal ImageViewControl GetImageViewControl()
         {
+            return this.ImageViewer;
         }
     }
 }
