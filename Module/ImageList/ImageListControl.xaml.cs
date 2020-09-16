@@ -16,6 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Path = System.IO.Path;
 using ExtremeEnviroment.Module.ImageView;
+using ExtremeEnviroment.Module.ImagePropView;
 
 namespace ExtremeEnviroment.Module.ImageList
 {
@@ -99,6 +100,15 @@ namespace ExtremeEnviroment.Module.ImageList
             return imageTreeViewItem;
         }
 
+        public void UpdateTreeItem(Dictionary<string, string> metadataMap) 
+        {
+            foreach (KeyValuePair<String, String> entry in metadataMap)
+            {
+                System.Diagnostics.Debug.WriteLine(entry.Key + " :: " + entry.Value);
+            }
+            
+        }
+
         private Dictionary<string, string> GetImageMetadata(string filePath)
         {
             Dictionary<string, string> metadataMap = new Dictionary<string, string>();
@@ -142,6 +152,11 @@ namespace ExtremeEnviroment.Module.ImageList
                 // set imageview
                 ImageViewControl imageViewControl = mainWindow.GetImageViewControl();
                 imageViewControl.SetImageSource(bitmapImage);
+
+                // set imagePropView
+                ImagePropViewControl imagePropViewControl =  mainWindow.GetImagePropViewControl();
+                string imageAbsolutePath = bitmapImage.UriSource.AbsolutePath;
+                imagePropViewControl.SetImageProps(this.GetImageMetadata(imageAbsolutePath));
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using ExtremeEnviroment.Module.ImageList;
 using ExtremeEnviroment.Module.ImageView;
+using ExtremeEnviroment.Module.ImagePropView;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,16 @@ namespace ExtremeEnviroment
         internal ImageViewControl GetImageViewControl()
         {
             return this.ImageViewer;
+        }
+
+        internal ImagePropViewControl GetImagePropViewControl()
+        {
+            return this.ImagePropView;
+        }
+
+        internal ImageListControl GetImageListControl()
+        {
+            return this.ImageList;
         }
     }
 }
