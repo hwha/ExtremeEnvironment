@@ -9,9 +9,9 @@
 
     <DockPanel>
         <GroupBox DockPanel.Dock="Top" Header="이미지 속성" VerticalAlignment="Stretch">
-            <DataGrid x:Name="DgImageProp" Loaded="DgImageProp_Loaded" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto">
+            <DataGrid x:Name="DgImageProp" AutoGenerateColumns="False" CellEditEnding="DgImageProp_CellEditEnding" RowEditEnding ="DgImageProp_RowEditEnding"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="속성" Binding="{Binding Path=PROP}" Width="4*">
+                    <DataGridTextColumn Header="속성" Binding="{Binding Path=PROP}" IsReadOnly="True" Width="4*">
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="{x:Type DataGridCell}">
                                 <Setter Property="Background" Value="LightGray">
@@ -19,7 +19,14 @@
                             </Style>
                         </DataGridTextColumn.CellStyle>                    
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="값" Binding="{Binding Path=VALUE}" Width="6*"/>
+                    <DataGridTextColumn Header="값" Binding="{Binding Path=VALUE}" Width="5.5*"/>
+                    <DataGridTemplateColumn Header="삭제">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="X" Command="Delete"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </GroupBox>

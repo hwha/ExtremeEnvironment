@@ -11,6 +11,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data;
+using ExtremeEnviroment.Module.ImageList;
+using ExtremeEnviroment.Model;
+
 
 namespace ExtremeEnviroment.Module.ImagePropView
 {
@@ -26,21 +29,49 @@ namespace ExtremeEnviroment.Module.ImagePropView
 
         private void DgImageProp_Loaded(object sender, RoutedEventArgs e)
         {
+           
+        }
+
+        public void SetImageProps(Dictionary<String, String> metadataMap)
+        {
             DataTable dataTable = new DataTable();
 
             dataTable.Columns.Add("PROP", typeof(string));
             dataTable.Columns.Add("VALUE", typeof(string));
 
-            dataTable.Rows.Add(new object[] { "파일명", "sample.png" });
-            dataTable.Rows.Add(new object[] { "위도", "23.19827" });
-            dataTable.Rows.Add(new object[] { "경도", "32.17623" });
-            dataTable.Rows.Add(new object[] { "생성일시", "2020-08-13 23:21:08" });
-            dataTable.Rows.Add(new object[] { "파일크기", "1,298,029" });
-            dataTable.Rows.Add(new object[] { "속성1", "속성1.." });
-            dataTable.Rows.Add(new object[] { "속성2", "속성2.." });
-            dataTable.Rows.Add(new object[] { "속성3", "속성3.." });
+            foreach (KeyValuePair<String, String> entry in metadataMap) 
+            {
+                dataTable.Rows.Add(new object[] { entry.Key, entry.Value });
+            }
+
+
 
             DgImageProp.ItemsSource = dataTable.DefaultView;
+            
+        }
+
+        private void DgImageProp_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+
+            TextBlock props = DgImageProp.Columns[0].GetCellContent(DgImageProp.Items[e.Row.GetIndex()]) as TextBlock;
+            TextBox value = e.EditingElement as TextBox;
+
+            if (props != null && value != null)
+            {
+                ImageListControl imageListControl = mainWindow.GetImageListControl();
+
+                Dictionary<string, string> metadataMap = new Dictionary<string, string>();
+                metadataMap.Add(props.Text, value.Text);
+                imageListControl.UpdateTreeItem(metadataMap);
+            }
+        }
+
+        private void DgImageProp_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        {
+            if (e.Row.Item != null) 
+            {
+            }
         }
     }
 }
