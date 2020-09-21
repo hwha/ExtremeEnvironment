@@ -7,7 +7,7 @@
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <GroupBox x:Name="groupBox" Header="수온추출결과 차트" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <GroupBox x:Name="groupBox" Header="ChartViewer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <lvc:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Right" >
             <lvc:CartesianChart.AxisY>
                 <lvc:Axis Title="Sales" LabelFormatter="{Binding YFormatter}"></lvc:Axis>

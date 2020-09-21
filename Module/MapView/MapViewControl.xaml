@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:ExtremeEnviroment.Module.MapView"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <GroupBox x:Name="groupBox" Header="이미지 좌표" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <GroupBox x:Name="groupBox" Header="MapViewer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         
     </GroupBox>
 </UserControl>
