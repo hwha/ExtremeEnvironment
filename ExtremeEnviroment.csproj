@@ -4,20 +4,44 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Resources\images.jpg" />
+    <None Remove="Resources\sample_image.jpg" />
+    <None Remove="Resources\toolbar\Cut_16x.png" />
+    <None Remove="Resources\toolbar\NewFileCollection_16x.png" />
+    <None Remove="Resources\toolbar\NewFile_16x.png" />
+    <None Remove="Resources\toolbar\OpenFolder_16x.png" />
+    <None Remove="Resources\toolbar\Save_16x.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <COMReference Include="{215d64d2-031c-33c7-96e3-61794cd1ee61}">
+      <Guid>215d64d2-031c-33c7-96e3-61794cd1ee61</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>4</VersionMinor>
+      <WrapperTool>tlbimp</WrapperTool>
+    </COMReference>
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="GMap.NET.Core" Version="2.0.1" />
     <PackageReference Include="GMap.NET.WinPresentation" Version="2.0.1" />
     <PackageReference Include="LiveCharts.Wpf.NetCore3" Version="0.9.7" />
+    <PackageReference Include="MetadataExtractor" Version="2.4.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Resources\images.jpg" />
+    <Resource Include="Resources\sample_image.jpg" />
+    <Resource Include="Resources\toolbar\Cut_16x.png" />
+    <Resource Include="Resources\toolbar\NewFileCollection_16x.png" />
+    <Resource Include="Resources\toolbar\NewFile_16x.png" />
+    <Resource Include="Resources\toolbar\OpenFolder_16x.png" />
+    <Resource Include="Resources\toolbar\Save_16x.png" />
   </ItemGroup>
 
 </Project>

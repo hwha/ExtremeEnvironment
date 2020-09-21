@@ -1,4 +1,7 @@
-﻿using System;
+﻿using MetadataExtractor;
+using Directory = MetadataExtractor.Directory;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -11,6 +14,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Path = System.IO.Path;
+using ExtremeEnviroment.Model;
+using ExtremeEnviroment.Module.ImageView;
+using ExtremeEnviroment.Module.ImagePropView;
 
 namespace ExtremeEnviroment.Module.ImageList
 {
@@ -19,23 +26,12 @@ namespace ExtremeEnviroment.Module.ImageList
     /// </summary>
     public partial class ImageListControl : UserControl
     {
+        public List<ImageData> _ImageDataList;
+
         public ImageListControl()
         {
             InitializeComponent();
-            InitControl();
-        }
-        void InitControl()
-        {
-            this.AddItem(this.GetTestItem());
-        }
-
-        private TreeViewItem GetTestItem()
-        {
-            TreeViewItem treeViewItem = this.CreateItem("Root", "images.jpg");
-            treeViewItem.Items.Add(this.CreateItem("CHILD1"));
-            treeViewItem.Items.Add(this.CreateItem("CHILD2"));
-            treeViewItem.Items.Add(this.CreateItem("CHILD3"));
-            return treeViewItem;
+            _ImageDataList = new List<ImageData>();
         }
 
         public void AddItem(TreeViewItem treeViewItem)
@@ -43,36 +39,56 @@ namespace ExtremeEnviroment.Module.ImageList
             ImageTree.Items.Add(treeViewItem);
         }
 
-        private TreeViewItem CreateItem(string itemName)
+        public void AddItem(string imagePath)
         {
-            return CreateItem(itemName, null);
+            BitmapImage bitmapImage = this.GetLocalImage(imagePath);
+            this.AddItem(this.CreateTreeItem(bitmapImage));
         }
 
-        private TreeViewItem CreateItem(string itemName, string imagePath)
+        public List<ImageData> GetImageDataList()
         {
-            TextBlock textBlock = new TextBlock();
+            return _ImageDataList;
+        }
 
-            if (imagePath == null)
+        public TreeViewItem SelectedItem
+        {
+            get
             {
-                textBlock.Inlines.Add(itemName);
+                object selectedItem = this.ImageTree.SelectedItem;
+                if (selectedItem == null)
+                {
+                    return null;
+                }
+
+                return (TreeViewItem)selectedItem;
             }
-            else
-            {
-                // load imagesource
-                BitmapImage bitmapImage = new BitmapImage();
-                try
-                {
-                    bitmapImage.BeginInit();
-                    bitmapImage.UriSource = new Uri("pack://application:,,/Resources/" + imagePath);
-                    bitmapImage.EndInit();
-                }
-                catch (IOException e)
-                {
-                    if (e.Source != null)
-                        Console.WriteLine("IOException source: {0}", e.Source);
-                }
+        }
 
-                // set imagesource
+        public BitmapImage SelectedItemImage
+        {
+            get
+            {
+                BitmapImage imageSource = null;
+                TreeViewItem selectedItem = this.SelectedItem;
+                
+                if (selectedItem != null && selectedItem.Header is TextBlock textBlock)
+                {
+                    Image thumnailImage = (Image)((InlineUIContainer)textBlock.Inlines.FirstInline).Child;
+                    imageSource = (BitmapImage)thumnailImage.Source;
+                }
+                return imageSource;
+            }
+        }
+
+        private TreeViewItem CreateTreeItem(BitmapImage bitmapImage)
+        {
+            TreeViewItem imageTreeViewItem = null;
+            if (bitmapImage != null)
+            {
+                imageTreeViewItem = new TreeViewItem();
+                string imageAbsolutePath = bitmapImage.UriSource.AbsolutePath;
+                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(imageAbsolutePath);
+
                 Image iconImage = new Image
                 {
                     Source = bitmapImage,
@@ -80,18 +96,129 @@ namespace ExtremeEnviroment.Module.ImageList
                     Height = 16
                 };
 
-                // create item textblock
+                TextBlock textBlock = new TextBlock();
                 textBlock.Inlines.Add(iconImage);
-                textBlock.Inlines.Add(itemName);
+                textBlock.Inlines.Add(fileNameWithoutExtension);
+
+                imageTreeViewItem.Header = textBlock;
+
+                // append metadata tree
+                Dictionary<string, string> metaData = this.GetImageMetadata(imageAbsolutePath);
+                this.AppendMetadataToTreeItem(imageTreeViewItem, metaData);
+
+                // Add Image and metadata listed on tree
+                ImageData imageData = new ImageData();
+                imageData.Image = bitmapImage;
+                imageData.ImageName = Path.GetFileName(imageAbsolutePath);
+                imageData.ImageProps = metaData;
+                _ImageDataList.Add(imageData);
+            }
+
+            return imageTreeViewItem;
+        }
+
+        public void UpdateTreeItem(Dictionary<string, string> metadataMap) 
+        {
+            foreach (KeyValuePair<String, String> entry in metadataMap)
+            {
+                System.Diagnostics.Debug.WriteLine(entry.Key + " :: " + entry.Value);
             }
             
+        }
 
-            TreeViewItem treeViewItem = new TreeViewItem
+        private Dictionary<string, string> GetImageMetadata(string filePath)
+        {
+            Dictionary<string, string> metadataMap = new Dictionary<string, string>();
+            IReadOnlyList<Directory> readOnlyLists = ImageMetadataReader.ReadMetadata(filePath);
+            foreach (var dir in readOnlyLists)
             {
-                Header = textBlock
+                foreach (var tag in dir.Tags)
+                {
+                    metadataMap.Add($"{tag.Name}", $"{tag.Description}");
+                }
+            }
+            return metadataMap;
+        }
+
+        private BitmapImage GetLocalImage(string imagePath)
+        {
+            BitmapImage bitmapImage = new BitmapImage();
+            try
+            {
+                bitmapImage.BeginInit();
+                bitmapImage.UriSource = new Uri(imagePath, UriKind.Absolute);
+                bitmapImage.EndInit();
+            }
+            catch (IOException e)
+            {
+                if (e.Source != null)
+                    Console.WriteLine("IOException source: {0}", e.Source);
+                throw e;
+            }
+            return bitmapImage;
+
+        }
+
+        // Tree DoubleClick Handler
+        private void OnTreeViewItemDoubleClick(object sender, RoutedEventArgs e)
+        {
+            BitmapImage bitmapImage = this.SelectedItemImage;
+            if(bitmapImage != null)
+            {
+                MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
+                // set imageview
+                ImageViewControl imageViewControl = mainWindow.GetImageViewControl();
+                imageViewControl.SetImageSource(bitmapImage);
+
+                // set imagePropView
+                ImagePropViewControl imagePropViewControl =  mainWindow.GetImagePropViewControl();
+                string imageAbsolutePath = bitmapImage.UriSource.AbsolutePath;
+                imagePropViewControl.SetImageProps(this.GetImageMetadata(imageAbsolutePath));
+            }
+        }
+
+        // Add Button Handler
+        private void BtnAddItem_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog()
+            {
+                Multiselect = true,
+                Filter = "Image Files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;*.tif;*.tiff|All files(*.*)|*.*"
             };
 
-            return treeViewItem;
+            Nullable<bool> result = openFileDialog.ShowDialog();
+            if (result == true)
+            {
+                string[] fileNames = openFileDialog.FileNames;
+                foreach (string fileName in fileNames)
+                {
+                    this.AddItem(fileName);
+                }
+            }
+        }
+        // Remove Button Handler
+        private void BtnRemoveItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.SelectedItem != null)
+            {
+                this.ImageTree.Items.Remove(this.SelectedItem);
+                // TODO: 삭제되는 아이템이랑 연결된 컨트롤도 초기화 필요
+            }
+        }
+
+        private void AppendMetadataToTreeItem(TreeViewItem treeViewItem, Dictionary<string, string> metadataMap)
+        {
+            if (treeViewItem != null)
+            {
+                foreach (KeyValuePair<string, string> keyValuePair in metadataMap)
+                {
+                    if (keyValuePair.Key.IndexOf("Unknown tag") < 0)
+                    {
+                        treeViewItem.Items.Add(new TreeViewItem { Header = $"[{keyValuePair.Key}]{keyValuePair.Value}" });
+                    }
+                }
+            }
         }
     }
 }
+

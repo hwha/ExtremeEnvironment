@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="ExtremeEnviroment.Module.ImagePropView.ImagePropViewControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ExtremeEnviroment.Module.ImagePropView"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <DockPanel>
+        <GroupBox DockPanel.Dock="Top" Header="이미지 속성" VerticalAlignment="Stretch">
+            <DataGrid x:Name="DgImageProp" AutoGenerateColumns="False" CellEditEnding="DgImageProp_CellEditEnding" RowEditEnding ="DgImageProp_RowEditEnding"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="속성" Binding="{Binding Path=PROP}" IsReadOnly="True" Width="4*">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="{x:Type DataGridCell}">
+                                <Setter Property="Background" Value="LightGray">
+                                </Setter>
+                            </Style>
+                        </DataGridTextColumn.CellStyle>                    
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="값" Binding="{Binding Path=VALUE}" Width="5.5*"/>
+                    <DataGridTemplateColumn Header="삭제">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="X" Command="Delete"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+
+    </DockPanel>
+</UserControl>

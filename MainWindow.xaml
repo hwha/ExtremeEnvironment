@@ -9,10 +9,13 @@
         xmlns:ImageInspector="clr-namespace:ExtremeEnviroment.Module.ImageInspector"
         xmlns:MapView="clr-namespace:ExtremeEnviroment.Module.MapView"
         xmlns:ChartView="clr-namespace:ExtremeEnviroment.Module.ChartView"
+        xmlns:ImagePropView="clr-namespace:ExtremeEnviroment.Module.ImagePropView"
+        xmlns:DataList="clr-namespace:ExtremeEnviroment.Module.DataList"
+        xmlns:Menu="clr-namespace:ExtremeEnviroment.Module.Menu"
         x:Class="ExtremeEnviroment.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1050" Width="1680">
-    <Grid x:Name="mainPanel">
+        Title="{Binding Path=MainWindowTitle}" Height="900" Width="1600">
+    <Grid x:Name="mainPanel" d:IsLocked="True">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="2*"/>
@@ -22,6 +25,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="5*"/>
             <RowDefinition Height="Auto" />
@@ -29,33 +33,40 @@
         </Grid.RowDefinitions>
         <GridSplitter HorizontalAlignment="Stretch" 
                       VerticalAlignment="Center" 
-                      Grid.Row="3" 
+                      Grid.Row="4" 
                       Grid.Column="0"
                       Grid.ColumnSpan="5" 
                       Background="DarkGray"
                       ShowsPreview="True"
                       Height="5"/>
+        <Menu:MenuControl x:Name="Menu" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" Grid.ColumnSpan="5" />
+        
+        <ToolBarTray Height="25" Grid.Row="1" Grid.ColumnSpan="5">
+            <ToolBar>
+                <Button Command="New" ToolTip="새 프로젝트">
+                    <Image Source="Resources/toolbar/NewFileCollection_16x.png" />
+                </Button>
+                <Button Command="Open" ToolTip="파일열기">
+                    <Image Source="Resources/toolbar/OpenFolder_16x.png" />
+                </Button>
+                <Button Command="Save" ToolTip="저장하기">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Resources/toolbar/Save_16x.png" />
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+        
 
-        <Menu Height="25" Grid.Row="0" Grid.ColumnSpan="5">
-            <MenuItem Header="파일">
-                <MenuItem Header="새로만들기">
-                    <MenuItem Header="새로만들기1"/>
-                    <MenuItem Header="새로만들기2"/>
-                </MenuItem>
-                <MenuItem Header="열기"/>
-                <MenuItem Header="저장"/>
-                <MenuItem Header="다른이름으로 저장"/>
-                <Separator />
-                <MenuItem Header="종료"/>
-            </MenuItem>
-        </Menu>
+        <ImageList:ImageListControl x:Name="ImageList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="2" Grid.RowSpan="2" />
+        <ImageView:ImageViewControl x:Name="ImageViewer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="2" />
+        <ImageInspector:ImageInspectorControl x:Name="ImageInspector" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="2" Grid.RowSpan="2" />
+        <MapView:MapViewControl x:Name="MapViewer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="4" Grid.Row="2" />
+        <ImagePropView:ImagePropViewControl x:Name="ImagePropView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="4" Grid.Row="3" />
+        <DataList:DataListControl x:Name="DataList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" />
+        <ChartView:ChartViewControl  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="5"  />
 
-        <ImageList:ImageListControl x:Name="ImageList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" />
-        <ImageView:ImageViewControl x:Name="ImageViewer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="2" />
-        <ImageInspector:ImageInspectorControl x:Name="ImageInspector" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="1" Grid.RowSpan="2" />
-        <MapView:MapViewControl x:Name="MapViewer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="4" Grid.Row="1" />
-        <Button Grid.Column="4" Grid.Row="4" Content="결과 저장"/>
-        <ChartView:ChartViewControl  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="4"  />
+        <Button Grid.Column="4" Grid.Row="5" Content="결과 저장"/>
 
     </Grid>
 </Window>
