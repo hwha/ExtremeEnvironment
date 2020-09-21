@@ -106,7 +106,7 @@ namespace ExtremeEnviroment.Module.ImageView
         {
             int index = this.rectangleList.IndexOf(this.currentRectangle);
             int numPixel = (int) this.currentRectangle.Width * (int) this.currentRectangle.Height;
-            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+            MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
             mainWindow.ImageInspector.addRow(index, numPixel);
 
             imageCanvas.Children.Remove(this.currentRectangle);
