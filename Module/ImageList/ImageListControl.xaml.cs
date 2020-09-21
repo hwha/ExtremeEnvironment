@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Path = System.IO.Path;
+using ExtremeEnviroment.Model;
 using ExtremeEnviroment.Module.ImageView;
 using ExtremeEnviroment.Module.ImagePropView;
 
@@ -25,9 +26,12 @@ namespace ExtremeEnviroment.Module.ImageList
     /// </summary>
     public partial class ImageListControl : UserControl
     {
+        public List<ImageData> _ImageDataList;
+
         public ImageListControl()
         {
             InitializeComponent();
+            _ImageDataList = new List<ImageData>();
         }
 
         public void AddItem(TreeViewItem treeViewItem)
@@ -39,6 +43,11 @@ namespace ExtremeEnviroment.Module.ImageList
         {
             BitmapImage bitmapImage = this.GetLocalImage(imagePath);
             this.AddItem(this.CreateTreeItem(bitmapImage));
+        }
+
+        public List<ImageData> GetImageDataList()
+        {
+            return _ImageDataList;
         }
 
         public TreeViewItem SelectedItem
@@ -94,7 +103,15 @@ namespace ExtremeEnviroment.Module.ImageList
                 imageTreeViewItem.Header = textBlock;
 
                 // append metadata tree
-                this.AppendMetadataToTreeItem(imageTreeViewItem, this.GetImageMetadata(imageAbsolutePath));
+                Dictionary<string, string> metaData = this.GetImageMetadata(imageAbsolutePath);
+                this.AppendMetadataToTreeItem(imageTreeViewItem, metaData);
+
+                // Add Image and metadata listed on tree
+                ImageData imageData = new ImageData();
+                imageData.Image = bitmapImage;
+                imageData.ImageName = Path.GetFileName(imageAbsolutePath);
+                imageData.ImageProps = metaData;
+                _ImageDataList.Add(imageData);
             }
 
             return imageTreeViewItem;
@@ -148,7 +165,7 @@ namespace ExtremeEnviroment.Module.ImageList
             BitmapImage bitmapImage = this.SelectedItemImage;
             if(bitmapImage != null)
             {
-                MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+                MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
                 // set imageview
                 ImageViewControl imageViewControl = mainWindow.GetImageViewControl();
                 imageViewControl.SetImageSource(bitmapImage);

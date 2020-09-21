@@ -11,9 +11,10 @@
         xmlns:ChartView="clr-namespace:ExtremeEnviroment.Module.ChartView"
         xmlns:ImagePropView="clr-namespace:ExtremeEnviroment.Module.ImagePropView"
         xmlns:DataList="clr-namespace:ExtremeEnviroment.Module.DataList"
+        xmlns:Menu="clr-namespace:ExtremeEnviroment.Module.Menu"
         x:Class="ExtremeEnviroment.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="900" Width="1600">
+        Title="{Binding Path=MainWindowTitle}" Height="900" Width="1600">
     <Grid x:Name="mainPanel" d:IsLocked="True">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
@@ -38,20 +39,8 @@
                       Background="DarkGray"
                       ShowsPreview="True"
                       Height="5"/>
-
-        <Menu Height="25" Grid.Row="0" Grid.ColumnSpan="5">
-            <MenuItem Header="파일">
-                <MenuItem Header="새로만들기">
-                    <MenuItem Header="새로만들기1"/>
-                    <MenuItem Header="새로만들기2"/>
-                </MenuItem>
-                <MenuItem Header="열기"/>
-                <MenuItem Header="저장"/>
-                <MenuItem Header="다른이름으로 저장"/>
-                <Separator />
-                <MenuItem Header="종료"/>
-            </MenuItem>
-        </Menu>
+        <Menu:MenuControl x:Name="Menu" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" Grid.ColumnSpan="5" />
+        
         <ToolBarTray Height="25" Grid.Row="1" Grid.ColumnSpan="5">
             <ToolBar>
                 <Button Command="New" ToolTip="새 프로젝트">

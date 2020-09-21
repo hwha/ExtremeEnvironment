@@ -12,7 +12,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data;
 using ExtremeEnviroment.Module.ImageList;
-using ExtremeEnviroment.Model;
 
 
 namespace ExtremeEnviroment.Module.ImagePropView
@@ -52,7 +51,7 @@ namespace ExtremeEnviroment.Module.ImagePropView
 
         private void DgImageProp_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+            MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
 
             TextBlock props = DgImageProp.Columns[0].GetCellContent(DgImageProp.Items[e.Row.GetIndex()]) as TextBlock;
             TextBox value = e.EditingElement as TextBox;
