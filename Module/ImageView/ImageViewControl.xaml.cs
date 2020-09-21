@@ -52,8 +52,8 @@ namespace ExtremeEnviroment.Module.ImageView
         {
             if(e.LeftButton == MouseButtonState.Pressed)
             {
-                Point pos = e.GetPosition(this);
 
+                Point pos = e.GetPosition(this);
                 var x = Math.Min(pos.X, startPoint.X);
                 var y = Math.Min(pos.Y, startPoint.Y);
 
@@ -72,5 +72,26 @@ namespace ExtremeEnviroment.Module.ImageView
             }
 
         }
+        private void ImageCanvas_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void BgImage_MouseEnter(object sender, MouseEventArgs e)
+        {
+            this.locationText.Text = "0 x 0";
+        }
+
+        private void BgImage_MouseLeave(object sender, MouseEventArgs e)
+        {
+            this.locationText.Text = "None";
+        }
+
+        private void BgImage_MouseMove(object sender, MouseEventArgs e)
+        {
+            Point pos = e.GetPosition(this);
+            this.locationText.Text = (int) pos.X + " x " + (int) pos.Y;
+        }
+
     }
 }
