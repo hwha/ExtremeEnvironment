@@ -1,6 +1,5 @@
 ﻿using ExtremeEnviroment.Module.ImageList;
 using ExtremeEnviroment.Module.ImageView;
-using ExtremeEnviroment.Module.ImagePropView;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,37 +22,14 @@ namespace ExtremeEnviroment
     /// </summary>
     public partial class MainWindow : Window
     {
-        readonly private String _projectName;
-
-        public static MainWindow _mainWindow;
-
-        public string MainWindowTitle
-        {
-            get { return this._projectName; }
-            set { this.Title = _projectName; }
-        }
-
-        public MainWindow(String projectName)
+        public MainWindow()
         {
             InitializeComponent();
-            DataContext = this;
-            _projectName = projectName;
-            _mainWindow = this;
+            //InitLayout();
         }
 
-        internal ImageViewControl GetImageViewControl()
+        private void InitLayout()
         {
-            return this.ImageViewer;
-        }
-
-        internal ImagePropViewControl GetImagePropViewControl()
-        {
-            return this.ImagePropView;
-        }
-
-        internal ImageListControl GetImageListControl()
-        {
-            return this.ImageList;
         }
     }
 }

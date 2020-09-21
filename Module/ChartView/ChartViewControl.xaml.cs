@@ -24,7 +24,7 @@ namespace ExtremeEnviroment.Module.ChartView
         public string[] Labels { get; set; }
         public Func<double, string> YFormatter { get; set; }
 
-        public enum LineSmooth
+        enum LineSmooth
         {
             Smooth, Straight
         }
@@ -54,7 +54,7 @@ namespace ExtremeEnviroment.Module.ChartView
 
         }
 
-        public bool AddLineSeries(string title, List<double> values, LineSmooth lineSmooth)
+        public Boolean AddLineSeries(string title, List<double> values, LineSmooth lineSmooth)
         {
             try
             {

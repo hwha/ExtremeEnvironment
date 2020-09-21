@@ -6,9 +6,7 @@
              xmlns:local="clr-namespace:ExtremeEnviroment.Module.ImageView"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <GroupBox x:Name="groupBox" Header="이미지 뷰어" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <Canvas x:Name="imageCanvas" MouseDown="ImageCanvas_MouseDown" MouseMove="ImageCanvas_MouseMove">
-            <Image x:Name="bgImage" Width="{Binding Path=ActualWidth, ElementName=imageCanvas}" Height="{Binding Path=ActualHeight, ElementName=imageCanvas}" Stretch="Uniform"></Image>
-        </Canvas>
-    </GroupBox>
+    <Canvas x:Name="imageCanvas" MouseDown="imageCanvas_MouseDown" MouseMove="imageCanvas_MouseMove">
+        <Image x:Name="bgImage" Width="{Binding Path=ActualWidth, ElementName=imageCanvas}" Height="{Binding Path=ActualHeight, ElementName=imageCanvas}" Stretch="Uniform"></Image>
+    </Canvas>
 </UserControl>
