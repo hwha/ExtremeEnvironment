@@ -79,7 +79,7 @@ namespace ExtremeEnviroment.Module.ImageList
                 imageTreeViewItem = new TreeViewItem();
                 string imageAbsolutePath = bitmapImage.UriSource.AbsolutePath;
                 string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(imageAbsolutePath);
-
+                
                 Image iconImage = new Image
                 {
                     Source = bitmapImage,

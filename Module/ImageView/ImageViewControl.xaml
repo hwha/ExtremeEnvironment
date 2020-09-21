@@ -9,8 +9,16 @@
     <GroupBox x:Name="groupBox" Header="이미지 뷰어" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <DockPanel>
             <TextBlock x:Name="locationText" HorizontalAlignment="Left" TextWrapping="Wrap" DockPanel.Dock="Top"/>
-            <Canvas x:Name="imageCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseDown="ImageCanvas_MouseDown" MouseMove="ImageCanvas_MouseMove" MouseUp="ImageCanvas_MouseUp" DockPanel.Dock="Top">
-                <Image x:Name="bgImage" Width="{Binding Path=ActualWidth, ElementName=imageCanvas}" Height="{Binding Path=ActualHeight, ElementName=imageCanvas}" MouseEnter="BgImage_MouseEnter" MouseLeave="BgImage_MouseLeave" MouseMove="BgImage_MouseMove" Stretch="Uniform"></Image>
+            <Canvas x:Name="imageCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  DockPanel.Dock="Top">
+                <Image x:Name="bgImage"
+                       Width="{Binding Path=ActualWidth, ElementName=imageCanvas}"
+                       Height="{Binding Path=ActualHeight, ElementName=imageCanvas}"
+                       MouseEnter="BgImage_MouseEnter"
+                       MouseLeave="BgImage_MouseLeave"
+                       MouseMove="BgImage_MouseMove"
+                       MouseDown="BgImage_MouseDown"
+                       MouseUp="BgImage_MouseUp"
+                       Stretch="Uniform"></Image>
             </Canvas>
             <!--
             <ScrollViewer x:Name="scrollViewer" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" DockPanel.Dock="Top">

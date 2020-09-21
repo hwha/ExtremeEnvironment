@@ -18,6 +18,7 @@
         <GroupBox Header="Data" VerticalAlignment="Stretch">
             <DataGrid x:Name="DgInspector" Loaded="DgInspector_Loaded" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto">
                 <DataGrid.Columns>
+                    <DataGridTextColumn Header="Index" Binding="{Binding Path=INDEX}" Visibility="Hidden"/>
                     <DataGridTextColumn Header="번호" Binding="{Binding Path=NUM}"/>
                     <DataGridTextColumn Header="구분" Binding="{Binding Path=INSPECTOR}"/>
                     <DataGridTextColumn Header="픽셀 수" Binding="{Binding Path=NUM_PIXEL}"/>
