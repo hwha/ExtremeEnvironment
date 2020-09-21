@@ -23,9 +23,22 @@ namespace ExtremeEnviroment
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        readonly private String _projectName;
+
+        public static MainWindow _mainWindow;
+
+        public string MainWindowTitle
+        {
+            get { return this._projectName; }
+            set { this.Title = _projectName; }
+        }
+
+        public MainWindow(String projectName)
         {
             InitializeComponent();
+            DataContext = this;
+            _projectName = projectName;
+            _mainWindow = this;
         }
 
         internal ImageViewControl GetImageViewControl()

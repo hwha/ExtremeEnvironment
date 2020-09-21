@@ -1,0 +1,30 @@
+﻿<Window x:Class="ExtremeEnviroment.NewProjectWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ExtremeEnviroment"
+        mc:Ignorable="d"
+        Title="NewProject" Height="200" Width="800">
+    <Grid x:Name="mainPanel" d:IsLocked="True">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.5*"/>
+            <ColumnDefinition Width="9*"/>
+            <ColumnDefinition Width="0.5*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="0.5*"/>
+        </Grid.RowDefinitions>
+        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1">
+            <Label Content="프로젝트명 :"  Target="{Binding ElementName=textNewProjectName}"/>
+            <TextBox x:Name="TextNewProjectName" Margin="5" Height="30"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2">
+            <Button x:Name="BtnCancel" Click="BtnCancel_Click" Content="취소" Margin="10" Width="80" Height="25"/>
+            <Button x:Name="BtnCreate" Click="BtnCreate_Click" Content="생성" Margin="10" Width="80" Height="25"/>
+        </StackPanel>
+    </Grid>
+</Window>
