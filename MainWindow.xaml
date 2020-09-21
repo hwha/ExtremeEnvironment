@@ -60,7 +60,7 @@
 
         <ImageList:ImageListControl x:Name="ImageList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="2" Grid.RowSpan="2" />
         <ImageView:ImageViewControl x:Name="ImageViewer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="2" />
-        <ImageInspector:ImageInspectorControl x:Name="ImageInspector" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="2" Grid.RowSpan="2" />
+        <ImageInspector:ImageInspectorControl x:Name="ImageInspector" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="2" Grid.RowSpan="2" x:FieldModifier="public"/>
         <MapView:MapViewControl x:Name="MapViewer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="4" Grid.Row="2" />
         <ImagePropView:ImagePropViewControl x:Name="ImagePropView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="4" Grid.Row="3" />
         <DataList:DataListControl x:Name="DataList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" />
