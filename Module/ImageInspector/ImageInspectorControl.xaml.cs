@@ -42,7 +42,7 @@ namespace ExtremeEnviroment.Module.ImageInspector
 
             //DgInspector.ItemsSource = dataTable.DefaultView;
         }
-        public void addRow(int idx, int numPixel)
+        public void AddRow(int idx, int numPixel)
         {
             ItemCollection items = DgInspector.Items;
 
