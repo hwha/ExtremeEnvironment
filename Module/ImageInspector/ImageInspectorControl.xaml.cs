@@ -42,15 +42,18 @@ namespace ExtremeEnviroment.Module.ImageInspector
 
             //DgInspector.ItemsSource = dataTable.DefaultView;
         }
-        public void AddRow(int idx, int numPixel)
+        public void AddRow(int idx, int numPixel, string pixel)
         {
             ItemCollection items = DgInspector.Items;
-
+            string[] split = pixel.Split(",");
             items.Add(new InspectorItem {
                 INDEX = idx,
                 NUM = items.Count+1,
                 INSPECTOR = "영역",
                 NUM_PIXEL = numPixel,
+                AVG_TEMP = split[0],
+                MAX_TEMP = split[1],
+                MIN_TEMP = split[2]
             });
         }
     }

@@ -33,6 +33,10 @@ namespace ExtremeEnviroment.Module.ImageView
         {
             this.bgImage.Source = bitmapImage;
         }
+
+        /*
+         * MouseEvent Area
+         */
         private void BgImage_MouseEnter(object sender, MouseEventArgs e)
         {
             this.locationText.Text = "0 x 0";
@@ -51,23 +55,27 @@ namespace ExtremeEnviroment.Module.ImageView
                 this.currentRectangle = newRectangle;
                 this.rectangleList.Add(newRectangle);
 
+                imageCanvas.Children.Add(this.currentRectangle);
                 Canvas.SetLeft(this.currentRectangle, startPoint.X);
                 Canvas.SetTop(this.currentRectangle, startPoint.Y);
 
-                imageCanvas.Children.Add(this.currentRectangle);
             }
         }
         private void BgImage_MouseMove(object sender, MouseEventArgs e)
         {
-            Point posOnImage = e.GetPosition(this.bgImage);
-           
+            Point posOnImage = e.GetPosition(this.imageCanvas);
+            int bgImageWidth = (int)this.bgImage.RenderSize.Width;
+            int bgImageHeight = (int)this.bgImage.RenderSize.Height;
+
+
             int posX = (int)posOnImage.X;
             if (posX <= 0)
             {
                 posX = 0;
-            } else if(posX >= this.bgImage.Width)
+            }
+            else if (posX >= bgImageWidth)
             {
-                posX = (int)this.bgImage.Width;
+                posX = bgImageWidth;
             }
 
             int posY = (int)posOnImage.Y;
@@ -75,15 +83,16 @@ namespace ExtremeEnviroment.Module.ImageView
             {
                 posY = 0;
             }
-            else if (posY >= this.bgImage.Height)
+            else if (posY >= bgImageHeight)
             {
-                posY = (int)this.bgImage.Height;
+                posY = bgImageHeight;
             }
 
-            if ( 0 < posOnImage.X && posOnImage.X <= this.bgImage.Width
-                && posOnImage.Y > 0 && posOnImage.Y <= this.bgImage.Height)
+            this.locationText.Text = posX + " x " + posY;
+
+            if (0 < posOnImage.X && posOnImage.X <= bgImageWidth
+                && posOnImage.Y > 0 && posOnImage.Y <= bgImageHeight)
             {
-                this.locationText.Text = posX + " x " + posY;
                 if (e.LeftButton == MouseButtonState.Pressed)
                 {
                     Point pos = e.GetPosition(this.imageCanvas);
@@ -101,13 +110,32 @@ namespace ExtremeEnviroment.Module.ImageView
                 }
 
             }
+
+            BitmapSource bitmapSource = (BitmapSource)this.bgImage.Source;
+
+            PixelFormat pixelFormat = bitmapSource.Format;
+            bool indexed8 = (pixelFormat == PixelFormats.Indexed8);
+            bool bgr24 = (pixelFormat == PixelFormats.Bgr24);
+            bool bgr32 = (pixelFormat == PixelFormats.Bgr32);
+            bool bgra32 = (pixelFormat == PixelFormats.Bgra32);
+            bool pbgra32 = (pixelFormat == PixelFormats.Pbgra32);
+
+            this.locationText.Text = "24 = " + bgr24
+                                   + " 32 = " + bgr32
+                                   + " a32 = " + bgra32
+                                   + " pa32 = " + pbgra32
+                                   +" idx8 = " + indexed8;
         }
         private void BgImage_MouseUp(object sender, MouseButtonEventArgs e)
         {
             int index = this.rectangleList.IndexOf(this.currentRectangle);
-            int numPixel = (int) this.currentRectangle.Width * (int) this.currentRectangle.Height;
+            int width = (int)this.currentRectangle.Width;
+            int height = (int)this.currentRectangle.Height;
+            int numPixel = width * height;
+            // 픽셀 계산
+            string pixel = GetAveragePixelColor(width, height);
             MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
-            mainWindow.ImageInspector.AddRow(index, numPixel);
+            mainWindow.ImageInspector.AddRow(index, numPixel, pixel);
 
             imageCanvas.Children.Remove(this.currentRectangle);
             Mouse.Capture(null);
@@ -115,6 +143,32 @@ namespace ExtremeEnviroment.Module.ImageView
         private void BgImage_MouseLeave(object sender, MouseEventArgs e)
         {
             this.locationText.Text = "";
+        }
+
+        private string GetAveragePixelColor(int width, int height)
+        {
+            BitmapSource bitmapSource = (BitmapSource)this.bgImage.Source;
+
+            PixelFormat pixelFormat = bitmapSource.Format;
+
+            int numPixels = width * height;
+            int bytesPerPixel = (width * pixelFormat.BitsPerPixel + 7) / 8;
+            byte[] pixelBuffer = new byte[numPixels * bytesPerPixel];
+
+            Int32Rect rect = new Int32Rect((int)this.startPoint.X, (int)this.startPoint.Y, (int)this.currentRectangle.Width, (int)this.currentRectangle.Height);
+            bitmapSource.CopyPixels(rect, pixelBuffer, width * bytesPerPixel, 0);
+
+            long blue = 0;
+            long green = 0;
+            long red = 0;
+
+            for (int i = 0; i < pixelBuffer.Length; i += bytesPerPixel)
+            {
+                blue += pixelBuffer[i];
+                green += pixelBuffer[i + 1];
+                red += pixelBuffer[i + 2];
+            }
+            return blue + "," + green + "," + red;
         }
 
     }

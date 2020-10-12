@@ -9,6 +9,7 @@
     <GroupBox x:Name="groupBox" Header="이미지 뷰어" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <DockPanel>
             <TextBlock x:Name="locationText" HorizontalAlignment="Left" TextWrapping="Wrap" DockPanel.Dock="Top"/>
+            <!--
             <Canvas x:Name="imageCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  DockPanel.Dock="Top">
                 <Image x:Name="bgImage"
                        Width="{Binding Path=ActualWidth, ElementName=imageCanvas}"
@@ -20,19 +21,18 @@
                        MouseUp="BgImage_MouseUp"
                        Stretch="Uniform"></Image>
             </Canvas>
-            <!--
+            -->
             <ScrollViewer x:Name="scrollViewer" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" DockPanel.Dock="Top">
-                <Canvas x:Name="imageCanvas" Width="{Binding ActualWidth, ElementName=bgImage}" Height="{Binding ActualHeight, ElementName=bgImage}" MouseDown="ImageCanvas_MouseDown" MouseMove="ImageCanvas_MouseMove">
-                    <Canvas.Background>
-                        <VisualBrush>
-                            <VisualBrush.Visual>
-                                <Image x:Name="bgImage" Stretch="Uniform"></Image>
-                            </VisualBrush.Visual>
-                        </VisualBrush>
-                    </Canvas.Background>
+                <Canvas x:Name="imageCanvas" Width="{Binding ActualWidth, ElementName=bgImage}" Height="{Binding ActualHeight, ElementName=bgImage}">
+                    <Image x:Name="bgImage"
+                            MouseEnter="BgImage_MouseEnter"
+                            MouseLeave="BgImage_MouseLeave"
+                            MouseMove="BgImage_MouseMove"
+                            MouseDown="BgImage_MouseDown"
+                            MouseUp="BgImage_MouseUp"
+                            Stretch="Uniform"></Image>
                 </Canvas>
             </ScrollViewer>
-            -->
         </DockPanel>
     </GroupBox>
 </UserControl>
