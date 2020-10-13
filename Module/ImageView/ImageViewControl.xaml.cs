@@ -1,6 +1,7 @@
 ﻿using ExtremeEnviroment.Module.ImageInspector;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -110,33 +111,14 @@ namespace ExtremeEnviroment.Module.ImageView
                 }
 
             }
-
-            BitmapSource bitmapSource = (BitmapSource)this.bgImage.Source;
-
-            PixelFormat pixelFormat = bitmapSource.Format;
-            bool indexed8 = (pixelFormat == PixelFormats.Indexed8);
-            bool bgr24 = (pixelFormat == PixelFormats.Bgr24);
-            bool bgr32 = (pixelFormat == PixelFormats.Bgr32);
-            bool bgra32 = (pixelFormat == PixelFormats.Bgra32);
-            bool pbgra32 = (pixelFormat == PixelFormats.Pbgra32);
-
-            this.locationText.Text = "24 = " + bgr24
-                                   + " 32 = " + bgr32
-                                   + " a32 = " + bgra32
-                                   + " pa32 = " + pbgra32
-                                   +" idx8 = " + indexed8;
         }
         private void BgImage_MouseUp(object sender, MouseButtonEventArgs e)
         {
             int index = this.rectangleList.IndexOf(this.currentRectangle);
             int width = (int)this.currentRectangle.Width;
             int height = (int)this.currentRectangle.Height;
-            int numPixel = width * height;
             // 픽셀 계산
-            string pixel = GetAveragePixelColor(width, height);
-            MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
-            mainWindow.ImageInspector.AddRow(index, numPixel, pixel);
-
+            GetAveragePixelColor(index, width, height);
             imageCanvas.Children.Remove(this.currentRectangle);
             Mouse.Capture(null);
         }
@@ -145,30 +127,49 @@ namespace ExtremeEnviroment.Module.ImageView
             this.locationText.Text = "";
         }
 
-        private string GetAveragePixelColor(int width, int height)
+        private void GetAveragePixelColor(int index, int width, int height)
         {
+            
             BitmapSource bitmapSource = (BitmapSource)this.bgImage.Source;
 
             PixelFormat pixelFormat = bitmapSource.Format;
 
-            int numPixels = width * height;
-            int bytesPerPixel = (width * pixelFormat.BitsPerPixel + 7) / 8;
-            byte[] pixelBuffer = new byte[numPixels * bytesPerPixel];
-
             Int32Rect rect = new Int32Rect((int)this.startPoint.X, (int)this.startPoint.Y, (int)this.currentRectangle.Width, (int)this.currentRectangle.Height);
-            bitmapSource.CopyPixels(rect, pixelBuffer, width * bytesPerPixel, 0);
+            int bytesPerPixel = (width * pixelFormat.BitsPerPixel + 7) / 8;
+            int numPixels = width * height;
 
-            long blue = 0;
-            long green = 0;
-            long red = 0;
-
-            for (int i = 0; i < pixelBuffer.Length; i += bytesPerPixel)
+            MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
+            if(pixelFormat == PixelFormats.Indexed8)
             {
-                blue += pixelBuffer[i];
-                green += pixelBuffer[i + 1];
-                red += pixelBuffer[i + 2];
+                byte[] pixelBuffer = new byte[numPixels];
+                bitmapSource.CopyPixels(rect, pixelBuffer, bytesPerPixel, 0);
+                int sum = 0;
+                for (int i = 0; i < pixelBuffer.Length; ++i)
+                {
+                    sum += pixelBuffer[i];
+                }
+
+                mainWindow.ImageInspector.AddRow(index, sum / pixelBuffer.Length);
             }
-            return blue + "," + green + "," + red;
+            else
+            {
+                byte[] pixelBuffer = new byte[numPixels * bytesPerPixel];
+
+                bitmapSource.CopyPixels(rect, pixelBuffer, width * bytesPerPixel, 0);
+
+                long blue = 0;
+                long green = 0;
+                long red = 0;
+
+                for (int i = 0; i < pixelBuffer.Length; i += bytesPerPixel)
+                {
+                    blue += pixelBuffer[i];
+                    green += pixelBuffer[i + 1];
+                    red += pixelBuffer[i + 2];
+                }
+                mainWindow.ImageInspector.AddRow(index, numPixels, blue/pixelBuffer.Length + "," + green/pixelBuffer.Length + "," + red/pixelBuffer.Length);
+            }
+            
         }
 
     }
