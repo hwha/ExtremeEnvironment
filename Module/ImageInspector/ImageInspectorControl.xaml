@@ -16,15 +16,19 @@
             </GroupBox>
         <Button DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="23" Width="Auto" Name="button5">저장</Button>
         <GroupBox Header="Data" VerticalAlignment="Stretch">
-            <DataGrid x:Name="DgInspector" Loaded="DgInspector_Loaded" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto">
+            <DataGrid x:Name="DgInspector"  AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Index" Binding="{Binding Path=INDEX}" Visibility="Hidden"/>
                     <DataGridTextColumn Header="번호" Binding="{Binding Path=NUM}"/>
                     <DataGridTextColumn Header="구분" Binding="{Binding Path=INSPECTOR}"/>
                     <DataGridTextColumn Header="픽셀 수" Binding="{Binding Path=NUM_PIXEL}"/>
                     <DataGridTextColumn Header="평균 온도" Binding="{Binding Path=AVG_TEMP}"/>
-                    <DataGridTextColumn Header="최대 온도" Binding="{Binding Path=MAX_TEMP}"/>
                     <DataGridTextColumn Header="최저 온도" Binding="{Binding Path=MIN_TEMP}"/>
+                    <DataGridTextColumn Header="최대 온도" Binding="{Binding Path=MAX_TEMP}"/>
+                    <DataGridTextColumn Binding="{Binding Path=x}" Visibility="Hidden"/>
+                    <DataGridTextColumn Binding="{Binding Path=y}" Visibility="Hidden"/>
+                    <DataGridTextColumn Binding="{Binding Path=width}" Visibility="Hidden"/>
+                    <DataGridTextColumn Binding="{Binding Path=height}" Visibility="Hidden"/>
                 </DataGrid.Columns>
             </DataGrid>
         </GroupBox>
