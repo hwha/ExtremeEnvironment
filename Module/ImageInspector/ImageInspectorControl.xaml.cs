@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data;
+using System.Security.Cryptography;
 
 namespace ExtremeEnviroment.Module.ImageInspector
 {
@@ -19,44 +20,68 @@ namespace ExtremeEnviroment.Module.ImageInspector
     /// </summary>
     public partial class ImageInspectorControl : UserControl
     {
+        public InspectorItem SelectedItem;
         public ImageInspectorControl()
         {
             InitializeComponent();
         }
-
-        private void DgInspector_Loaded(object sender, RoutedEventArgs e)
+        public void AddRow(int index, InspectorItem item)
         {
-            //DataTable dataTable = new DataTable();
-
-            //dataTable.Columns.Add("NUM", typeof(int));
-            //dataTable.Columns.Add("INSPECTOR", typeof(string));
-            //dataTable.Columns.Add("NUM_PIXEL", typeof(int));
-            //dataTable.Columns.Add("AVG_TEMP", typeof(float));
-            //dataTable.Columns.Add("MAX_TEMP", typeof(float));
-            //dataTable.Columns.Add("MIN_TEMP", typeof(float));
-
-            //dataTable.Rows.Add(new object[] { "1", "영역", "25", "32.123", "49.092", "21.112" });
-            //dataTable.Rows.Add(new object[] { "2", "픽셀", "1", "20.121", "20.121", "20.121" });
-            //dataTable.Rows.Add(new object[] { "3", "픽셀", "1", "29.982", "29.982", "29.982" });
-            //dataTable.Rows.Add(new object[] { "4", "영역", "25", "32.123", "49.092", "21.112" });
-
-            //DgInspector.ItemsSource = dataTable.DefaultView;
+            ItemCollection inspectorItems = DgInspector.Items;
+            item.INDEX = index;
+            item.NUM = inspectorItems.Count + 1;
+            inspectorItems.Add(item);
         }
-        public void AddRow(int idx, int numPixel)
+        public void AddRow(int index, Dictionary<string, int> row)
         {
-            ItemCollection items = DgInspector.Items;
+            ItemCollection inspectorItems = DgInspector.Items;
 
-            items.Add(new InspectorItem {
+            InspectorItem inspectorItem = new InspectorItem(row)
+            {
+                INDEX = index,
+                NUM = inspectorItems.Count + 1
+            };
+
+            inspectorItems.Add(inspectorItem);
+        }
+        public void AddRow(int idx, int numPixel, string pixel)
+        {
+            ItemCollection inspectorItems = DgInspector.Items;
+            string[] split = pixel.Split(",");
+            inspectorItems.Add(new InspectorItem {
                 INDEX = idx,
-                NUM = items.Count+1,
+                NUM = inspectorItems.Count+1,
                 INSPECTOR = "영역",
                 NUM_PIXEL = numPixel,
+                AVG_TEMP = split[0],
+                MAX_TEMP = split[1],
+                MIN_TEMP = split[2]
             });
+        }
+
+        private void DgInspectorMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (sender != null)
+            {
+                DataGrid dataGrid = (DataGrid) sender;
+                if (dataGrid != null && dataGrid.SelectedItems != null && dataGrid.SelectedItems.Count == 1)
+                {
+                    InspectorItem selectedItem = (InspectorItem)dataGrid.SelectedItem;
+                    ExtremeEnviroment.MainWindow._mainWindow.ImageViewer.DrawRectangle(selectedItem.X, selectedItem.Y, selectedItem.Width, selectedItem.Height);
+                }
+            }
         }
     }
 
     public class InspectorItem
     {
+        public InspectorItem()
+        {
+        }
+        public InspectorItem(Dictionary<string, int> keyValuePairs)
+        {
+            this.FromDictionary(keyValuePairs);
+        }
         public int INDEX { get; set; }
         public int NUM { get; set; }
         public string INSPECTOR { get; set; }
@@ -64,5 +89,23 @@ namespace ExtremeEnviroment.Module.ImageInspector
         public string AVG_TEMP { get; set; }
         public string MAX_TEMP { get; set; }
         public string MIN_TEMP { get; set; }
+        // not visible
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+
+
+        public void FromDictionary(Dictionary<string, int> keyValuePairs)
+        {
+            this.NUM_PIXEL = keyValuePairs.GetValueOrDefault("NUM_PIXEL");
+            this.AVG_TEMP = keyValuePairs.GetValueOrDefault("AVG_TEMP").ToString();
+            this.MAX_TEMP = keyValuePairs.GetValueOrDefault("MAX_TEMP").ToString();
+            this.MIN_TEMP = keyValuePairs.GetValueOrDefault("MIN_TEMP").ToString();
+            this.X = keyValuePairs.GetValueOrDefault("X");
+            this.Y = keyValuePairs.GetValueOrDefault("Y");
+            this.Width = keyValuePairs.GetValueOrDefault("Width");
+            this.Height = keyValuePairs.GetValueOrDefault("Height");
+        }
     }
 }

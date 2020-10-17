@@ -134,7 +134,10 @@ namespace ExtremeEnviroment.Module.ImageList
             {
                 foreach (var tag in dir.Tags)
                 {
-                    metadataMap.Add($"{tag.Name}", $"{tag.Description}");
+                    if(!metadataMap.ContainsKey($"{tag.Name}"))
+                    {
+                        metadataMap.Add($"{tag.Name}", $"{tag.Description}");
+                    }
                 }
             }
             return metadataMap;
