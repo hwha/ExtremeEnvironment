@@ -177,6 +177,8 @@ namespace ExtremeEnviroment.Module.ImageList
                 ImagePropViewControl imagePropViewControl =  mainWindow.GetImagePropViewControl();
                 string imageAbsolutePath = bitmapImage.UriSource.AbsolutePath;
                 imagePropViewControl.SetImageProps(this.GetImageMetadata(imageAbsolutePath));
+
+                mainWindow.MapViewer.DrawMarker(37.498333, 126.866667);
             }
         }
 

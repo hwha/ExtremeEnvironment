@@ -49,17 +49,17 @@ namespace ExtremeEnviroment.Module.MapView
             this.groupBox.Content = mapControl;
         }
 
-        public void create_marker(int latitude, int longtitude)
+        public void DrawMarker(double latitude, double longtitude)
         {
-            PointLatLng point = mapControl.FromLocalToLatLng(latitude, longtitude);
+            // this.mapControl.Markers.Clear();
+            PointLatLng point = new PointLatLng(latitude, longtitude);
             GMapMarker marker = new GMapMarker(point)
             {
-                Shape = new Ellipse
+                Shape = new Image
                 {
                     Width = 10,
                     Height = 10,
-                    Stroke = Brushes.Black,
-                    StrokeThickness = 1.5
+                    Source = new BitmapImage(new Uri("pack://application:,,,/Assets/marker.png"))
                 }
             };
             this.mapControl.Markers.Add(marker);

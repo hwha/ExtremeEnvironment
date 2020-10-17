@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\marker.png" />
     <None Remove="Resources\images.jpg" />
     <None Remove="Resources\sample_image.jpg" />
     <None Remove="Resources\toolbar\Cut_16x.png" />
@@ -35,6 +36,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\marker.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\images.jpg" />
     <Resource Include="Resources\sample_image.jpg" />
     <Resource Include="Resources\toolbar\Cut_16x.png" />
