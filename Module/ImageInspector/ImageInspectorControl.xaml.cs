@@ -58,6 +58,19 @@ namespace ExtremeEnviroment.Module.ImageInspector
                 MIN_TEMP = split[2]
             });
         }
+
+        private void DgInspectorMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (sender != null)
+            {
+                DataGrid dataGrid = (DataGrid) sender;
+                if (dataGrid != null && dataGrid.SelectedItems != null && dataGrid.SelectedItems.Count == 1)
+                {
+                    InspectorItem selectedItem = (InspectorItem)dataGrid.SelectedItem;
+                    ExtremeEnviroment.MainWindow._mainWindow.ImageViewer.DrawRectangle(selectedItem.X, selectedItem.Y, selectedItem.Width, selectedItem.Height);
+                }
+            }
+        }
     }
 
     public class InspectorItem

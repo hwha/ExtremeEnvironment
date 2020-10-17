@@ -37,7 +37,7 @@ namespace ExtremeEnviroment.Module.ImageView
 
         public void DrawRectangle(int x, int y, int width, int height)
         {
-            imageCanvas.Children.Clear();
+            imageCanvas.Children.Remove(this.currentRectangle);
 
             Rectangle newRectangle = new Rectangle
             {
@@ -65,6 +65,7 @@ namespace ExtremeEnviroment.Module.ImageView
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
+                imageCanvas.Children.Remove(this.currentRectangle);
                 Mouse.Capture(this.bgImage);
                 this.startPoint = e.GetPosition(this.imageCanvas);
                 Rectangle newRectangle = new Rectangle
@@ -150,8 +151,6 @@ namespace ExtremeEnviroment.Module.ImageView
         private void BgImage_MouseLeave(object sender, MouseEventArgs e)
         {
             this.locationText.Text = "";
-
-            this.DrawRectangle(20, 20, 100, 100);
         }
 
         private Dictionary<string, int> GetAveragePixelColor(int width, int height)

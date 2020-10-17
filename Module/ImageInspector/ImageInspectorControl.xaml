@@ -16,7 +16,14 @@
             </GroupBox>
         <Button DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="23" Width="Auto" Name="button5">저장</Button>
         <GroupBox Header="Data" VerticalAlignment="Stretch">
-            <DataGrid x:Name="DgInspector"  AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto">
+            <DataGrid x:Name="DgInspector"
+                      IsReadOnly="True"
+                      AutoGenerateColumns="False"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch"
+                      Height="Auto"
+                      Width="Auto"
+                      MouseDoubleClick="DgInspectorMouseDoubleClick">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Index" Binding="{Binding Path=INDEX}" Visibility="Hidden"/>
                     <DataGridTextColumn Header="번호" Binding="{Binding Path=NUM}"/>
