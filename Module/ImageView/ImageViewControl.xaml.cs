@@ -35,6 +35,25 @@ namespace ExtremeEnviroment.Module.ImageView
             this.bgImage.Source = bitmapImage;
         }
 
+        public void DrawRectangle(int x, int y, int width, int height)
+        {
+            imageCanvas.Children.Clear();
+
+            Rectangle newRectangle = new Rectangle
+            {
+                Stroke = Brushes.Red,
+                StrokeThickness = 1,
+                Width = width,
+                Height = height
+            };
+
+            this.currentRectangle = newRectangle;
+            imageCanvas.Children.Add(this.currentRectangle);
+
+            Canvas.SetLeft(this.currentRectangle, x);
+            Canvas.SetTop(this.currentRectangle, y);
+        }
+
         /*
          * MouseEvent Area
          */
@@ -118,27 +137,36 @@ namespace ExtremeEnviroment.Module.ImageView
             int width = (int)this.currentRectangle.Width;
             int height = (int)this.currentRectangle.Height;
             // 픽셀 계산
-            GetAveragePixelColor(index, width, height);
+            Dictionary<string, int> row = GetAveragePixelColor(width, height);
+            // 현재 rectangle 정보 추가
+            row.Add("X", (int)this.startPoint.X);
+            row.Add("Y", (int)this.startPoint.Y);
+            row.Add("Width", (int)this.currentRectangle.Width);
+            row.Add("Height", (int)this.currentRectangle.Height);
+            ExtremeEnviroment.MainWindow._mainWindow.ImageInspector.AddRow(index, row);
             imageCanvas.Children.Remove(this.currentRectangle);
             Mouse.Capture(null);
         }
         private void BgImage_MouseLeave(object sender, MouseEventArgs e)
         {
             this.locationText.Text = "";
+
+            this.DrawRectangle(20, 20, 100, 100);
         }
 
-        private void GetAveragePixelColor(int index, int width, int height)
+        private Dictionary<string, int> GetAveragePixelColor(int width, int height)
         {
+            Dictionary<string, int> resultDict = new Dictionary<string, int>();
             
             BitmapSource bitmapSource = (BitmapSource)this.bgImage.Source;
-
             PixelFormat pixelFormat = bitmapSource.Format;
 
             Int32Rect rect = new Int32Rect((int)this.startPoint.X, (int)this.startPoint.Y, (int)this.currentRectangle.Width, (int)this.currentRectangle.Height);
             int bytesPerPixel = (width * pixelFormat.BitsPerPixel + 7) / 8;
             int numPixels = width * height;
 
-            MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
+            resultDict.Add("NUM_PIXEL", numPixels);
+            // pixel format에 따라 계산법이 다름 (indexed8 : 256color)
             if(pixelFormat == PixelFormats.Indexed8)
             {
                 byte[] pixelBuffer = new byte[numPixels];
@@ -148,8 +176,9 @@ namespace ExtremeEnviroment.Module.ImageView
                 {
                     sum += pixelBuffer[i];
                 }
-
-                mainWindow.ImageInspector.AddRow(index, sum / pixelBuffer.Length);
+                resultDict.Add("AVG_TEMP", sum / pixelBuffer.Length);
+                resultDict.Add("MAX_TEMP", sum / pixelBuffer.Length);
+                resultDict.Add("MIN_TEMP", sum / pixelBuffer.Length);
             }
             else
             {
@@ -157,19 +186,27 @@ namespace ExtremeEnviroment.Module.ImageView
 
                 bitmapSource.CopyPixels(rect, pixelBuffer, width * bytesPerPixel, 0);
 
-                long blue = 0;
-                long green = 0;
-                long red = 0;
+                int blue = 0;
+                int green = 0;
+                int red = 0;
+                int sumCount = 0;
 
                 for (int i = 0; i < pixelBuffer.Length; i += bytesPerPixel)
                 {
                     blue += pixelBuffer[i];
                     green += pixelBuffer[i + 1];
                     red += pixelBuffer[i + 2];
+                    if(pixelBuffer[i] > 0)
+                    {
+                        sumCount++;
+                    }
                 }
-                mainWindow.ImageInspector.AddRow(index, numPixels, blue/pixelBuffer.Length + "," + green/pixelBuffer.Length + "," + red/pixelBuffer.Length);
+                resultDict.Add("AVG_TEMP", red / sumCount);
+                resultDict.Add("MAX_TEMP", green / sumCount);
+                resultDict.Add("MIN_TEMP", red / sumCount);
             }
-            
+
+            return resultDict;
         }
 
     }
