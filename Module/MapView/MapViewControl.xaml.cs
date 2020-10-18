@@ -64,5 +64,10 @@ namespace ExtremeEnviroment.Module.MapView
             };
             this.mapControl.Markers.Add(marker);
         }
+
+        public void Clear()
+        {
+            this.mapControl.Markers.Clear();
+        }
     }
 }

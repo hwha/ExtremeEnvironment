@@ -114,7 +114,7 @@ namespace ExtremeEnviroment.Module.ImageView
             if (0 < posOnImage.X && posOnImage.X <= bgImageWidth
                 && posOnImage.Y > 0 && posOnImage.Y <= bgImageHeight)
             {
-                if (e.LeftButton == MouseButtonState.Pressed)
+                if (e.LeftButton == MouseButtonState.Pressed && this.currentRectangle != null)
                 {
                     Point pos = e.GetPosition(this.imageCanvas);
                     double x = Math.Min(pos.X, startPoint.X);
@@ -134,19 +134,22 @@ namespace ExtremeEnviroment.Module.ImageView
         }
         private void BgImage_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            int index = this.rectangleList.IndexOf(this.currentRectangle);
-            int width = (int)this.currentRectangle.Width;
-            int height = (int)this.currentRectangle.Height;
-            // 픽셀 계산
-            Dictionary<string, int> row = GetAveragePixelColor(width, height);
-            // 현재 rectangle 정보 추가
-            row.Add("X", (int)this.startPoint.X);
-            row.Add("Y", (int)this.startPoint.Y);
-            row.Add("Width", (int)this.currentRectangle.Width);
-            row.Add("Height", (int)this.currentRectangle.Height);
-            ExtremeEnviroment.MainWindow._mainWindow.ImageInspector.AddRow(index, row);
-            imageCanvas.Children.Remove(this.currentRectangle);
-            Mouse.Capture(null);
+            if(this.currentRectangle != null)
+            {
+                int index = this.rectangleList.IndexOf(this.currentRectangle);
+                int width = (int)this.currentRectangle.Width;
+                int height = (int)this.currentRectangle.Height;
+                // 픽셀 계산
+                Dictionary<string, int> row = GetAveragePixelColor(width, height);
+                // 현재 rectangle 정보 추가
+                row.Add("X", (int)this.startPoint.X);
+                row.Add("Y", (int)this.startPoint.Y);
+                row.Add("Width", (int)this.currentRectangle.Width);
+                row.Add("Height", (int)this.currentRectangle.Height);
+                ExtremeEnviroment.MainWindow._mainWindow.ImageInspector.AddRow(index, row);
+                imageCanvas.Children.Remove(this.currentRectangle);
+                Mouse.Capture(null);
+            }
         }
         private void BgImage_MouseLeave(object sender, MouseEventArgs e)
         {
