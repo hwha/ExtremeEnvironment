@@ -58,7 +58,8 @@ namespace ExtremeEnviroment.Module.ImageList
                     return null;
                 }
 
-                ImageData imageData = this.imageDataList.Find(data => data.ImageTreeViewItem == this.ImageTree.SelectedItem);
+                ImageData imageData = this.imageDataList.Find(data => 
+                    data.ImageTreeViewItem == this.ImageTree.SelectedItem);
                 if (imageData == null)
                 {
                     return null;
@@ -81,22 +82,7 @@ namespace ExtremeEnviroment.Module.ImageList
         {
             if (bitmapImage != null)
             {
-                TreeViewItem imageTreeViewItem = new TreeViewItem();
-                string imageAbsolutePath = bitmapImage.UriSource.AbsolutePath;
-                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(imageAbsolutePath);
-                
-                Image iconImage = new Image
-                {
-                    Source = bitmapImage,
-                    Width = 16,
-                    Height = 16
-                };
-
-                TextBlock textBlock = new TextBlock();
-                textBlock.Inlines.Add(iconImage);
-                textBlock.Inlines.Add(fileNameWithoutExtension);
-                imageTreeViewItem.Header = textBlock;
-
+                TreeViewItem imageTreeViewItem = this.CreateTreeViewItem(bitmapImage);
                 this.ImageTree.Items.Add(imageTreeViewItem);
 
                 // append metadata tree
@@ -108,16 +94,35 @@ namespace ExtremeEnviroment.Module.ImageList
                 {
                     ImageTreeViewItem = imageTreeViewItem,
                     Image = bitmapImage,
-                    ImageName = Path.GetFileName(imageAbsolutePath),
+                    ImageName = Path.GetFileName(bitmapImage.UriSource.AbsolutePath),
                     ImageProps = metaData
                 };
                 this.imageDataList.Add(imageData);
-
                 this.RefreshRelativeControls();
 
                 return imageTreeViewItem;
             }
             return null;
+        }
+
+        private TreeViewItem CreateTreeViewItem(BitmapImage bitmapImage) {
+            TreeViewItem newItem = new TreeViewItem();
+            string imageAbsolutePath = bitmapImage.UriSource.AbsolutePath;
+            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(imageAbsolutePath);
+
+            Image iconImage = new Image
+            {
+                Source = bitmapImage,
+                Width = 16,
+                Height = 16
+            };
+
+            TextBlock textBlock = new TextBlock();
+            textBlock.Inlines.Add(iconImage);
+            textBlock.Inlines.Add(fileNameWithoutExtension);
+            newItem.Header = textBlock;
+
+            return newItem;
         }
 
         public bool UpdateTreeItem(Dictionary<string, string> imageProps) 
@@ -191,14 +196,7 @@ namespace ExtremeEnviroment.Module.ImageList
             MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
 
             // Redraw map markers
-            mainWindow.MapViewer.Clear();
-            this.imageDataList.ForEach(imageData => {
-                Dictionary<string, string> imageProps = imageData.ImageProps;
-                if (imageProps.ContainsKey("Latitude") && imageProps.ContainsKey("Longitude"))
-                {
-                    mainWindow.MapViewer.DrawMarker(double.Parse(imageProps.GetValueOrDefault("Latitude")), double.Parse(imageProps.GetValueOrDefault("Longitude")));
-                }
-            });
+            mainWindow.MapViewer.Refresh();
         }
 
         // Tree DoubleClick Handler

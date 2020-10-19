@@ -69,5 +69,21 @@ namespace ExtremeEnviroment.Module.MapView
         {
             this.mapControl.Markers.Clear();
         }
+
+        public void Refresh()
+        {
+            this.Clear();
+            MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
+            List<Model.ImageData> imageDataList = mainWindow.ImageList.GetImageDataList();
+            imageDataList.ForEach(imageData =>
+            {
+                Dictionary<string, string> imageProps = imageData.ImageProps;
+                if (imageProps.ContainsKey("Latitude") && imageProps.ContainsKey("Longitude"))
+                {
+                    this.DrawMarker(double.Parse(imageProps.GetValueOrDefault("Latitude"))
+                        , double.Parse(imageProps.GetValueOrDefault("Longitude")));
+                }
+            });
+        }
     }
 }
