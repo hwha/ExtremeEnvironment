@@ -8,7 +8,7 @@
              d:DesignHeight="550" d:DesignWidth="800">
     <StackPanel Orientation="Vertical">
         <GroupBox x:Name="imageList" Header="이미지 탐색기" HorizontalAlignment="Stretch"  DockPanel.Dock="Top">
-            <TreeView x:Name="ImageTree" MinHeight="500">
+            <TreeView x:Name="ImageTree" MinHeight="500" MaxHeight="500" VerticalAlignment="top" ScrollViewer.VerticalScrollBarVisibility="Auto">
                 <TreeView.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}">
                         <EventSetter Event="MouseDoubleClick" Handler="OnTreeViewItemDoubleClick"/>

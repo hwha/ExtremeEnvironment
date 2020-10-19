@@ -18,6 +18,12 @@ using Path = System.IO.Path;
 using ExtremeEnviroment.Model;
 using ExtremeEnviroment.Module.ImageView;
 using ExtremeEnviroment.Module.ImagePropView;
+using MetadataExtractor.Formats.Exif;
+using System.Windows.Forms;
+using MessageBox = System.Windows.MessageBox;
+using UserControl = System.Windows.Controls.UserControl;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using System.Linq;
 
 namespace ExtremeEnviroment.Module.ImageList
 {
@@ -26,66 +32,56 @@ namespace ExtremeEnviroment.Module.ImageList
     /// </summary>
     public partial class ImageListControl : UserControl
     {
-        public List<ImageData> _ImageDataList;
+        public List<ImageData> imageDataList;
 
         public ImageListControl()
         {
             InitializeComponent();
-            _ImageDataList = new List<ImageData>();
+            imageDataList = new List<ImageData>();
         }
 
-        public void AddItem(TreeViewItem treeViewItem)
-        {
-            ImageTree.Items.Add(treeViewItem);
-        }
-
-        public void AddItem(string imagePath)
-        {
-            BitmapImage bitmapImage = this.GetLocalImage(imagePath);
-            this.AddItem(this.CreateTreeItem(bitmapImage));
-        }
-
-        public List<ImageData> GetImageDataList()
-        {
-            return _ImageDataList;
-        }
-
-        public TreeViewItem SelectedItem
+        public ImageData SelectedImageData
         {
             get
             {
-                object selectedItem = this.ImageTree.SelectedItem;
-                if (selectedItem == null)
-                {
-                    return null;
-                }
-
-                return (TreeViewItem)selectedItem;
+                return this.imageDataList.Find(data => data.ImageTreeViewItem == this.ImageTree.SelectedItem);
             }
+
         }
 
         public BitmapImage SelectedItemImage
         {
             get
             {
-                BitmapImage imageSource = null;
-                TreeViewItem selectedItem = this.SelectedItem;
-                
-                if (selectedItem != null && selectedItem.Header is TextBlock textBlock)
+                if (this.ImageTree.SelectedItem == null)
                 {
-                    Image thumnailImage = (Image)((InlineUIContainer)textBlock.Inlines.FirstInline).Child;
-                    imageSource = (BitmapImage)thumnailImage.Source;
+                    return null;
                 }
-                return imageSource;
+
+                ImageData imageData = this.imageDataList.Find(data => data.ImageTreeViewItem == this.ImageTree.SelectedItem);
+                if (imageData == null)
+                {
+                    return null;
+                }
+                return imageData.Image;
             }
         }
 
-        private TreeViewItem CreateTreeItem(BitmapImage bitmapImage)
+        public List<ImageData> GetImageDataList()
         {
-            TreeViewItem imageTreeViewItem = null;
+            return this.imageDataList;
+        }
+
+        private TreeViewItem AddItem(string imagePath)
+        {
+            return this.AddItem(this.LoadLocalImage(imagePath));
+        }
+
+        private TreeViewItem AddItem(BitmapImage bitmapImage)
+        {
             if (bitmapImage != null)
             {
-                imageTreeViewItem = new TreeViewItem();
+                TreeViewItem imageTreeViewItem = new TreeViewItem();
                 string imageAbsolutePath = bitmapImage.UriSource.AbsolutePath;
                 string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(imageAbsolutePath);
                 
@@ -99,51 +95,80 @@ namespace ExtremeEnviroment.Module.ImageList
                 TextBlock textBlock = new TextBlock();
                 textBlock.Inlines.Add(iconImage);
                 textBlock.Inlines.Add(fileNameWithoutExtension);
-
                 imageTreeViewItem.Header = textBlock;
 
+                this.ImageTree.Items.Add(imageTreeViewItem);
+
                 // append metadata tree
-                Dictionary<string, string> metaData = this.GetImageMetadata(imageAbsolutePath);
+                Dictionary<string, string> metaData = this.GetImageMetadata(imageTreeViewItem);
                 this.AppendMetadataToTreeItem(imageTreeViewItem, metaData);
 
                 // Add Image and metadata listed on tree
-                ImageData imageData = new ImageData();
-                imageData.Image = bitmapImage;
-                imageData.ImageName = Path.GetFileName(imageAbsolutePath);
-                imageData.ImageProps = metaData;
-                _ImageDataList.Add(imageData);
-            }
-
-            return imageTreeViewItem;
-        }
-
-        public void UpdateTreeItem(Dictionary<string, string> metadataMap) 
-        {
-            foreach (KeyValuePair<String, String> entry in metadataMap)
-            {
-                System.Diagnostics.Debug.WriteLine(entry.Key + " :: " + entry.Value);
-            }
-            
-        }
-
-        private Dictionary<string, string> GetImageMetadata(string filePath)
-        {
-            Dictionary<string, string> metadataMap = new Dictionary<string, string>();
-            IReadOnlyList<Directory> readOnlyLists = ImageMetadataReader.ReadMetadata(filePath);
-            foreach (var dir in readOnlyLists)
-            {
-                foreach (var tag in dir.Tags)
+                ImageData imageData = new ImageData
                 {
-                    if(!metadataMap.ContainsKey($"{tag.Name}"))
+                    ImageTreeViewItem = imageTreeViewItem,
+                    Image = bitmapImage,
+                    ImageName = Path.GetFileName(imageAbsolutePath),
+                    ImageProps = metaData
+                };
+                this.imageDataList.Add(imageData);
+
+                this.RefreshRelativeControls();
+
+                return imageTreeViewItem;
+            }
+            return null;
+        }
+
+        public bool UpdateTreeItem(Dictionary<string, string> imageProps) 
+        {
+            if(this.SelectedImageData == null || imageProps == null)
+            {
+                return false;
+            }
+            this.SelectedImageData.ImageProps = imageProps;
+            this.RefreshRelativeControls();
+            return true;
+        }
+
+        private Dictionary<string, string> GetImageMetadata(TreeViewItem treeViewItem)
+        {
+            TextBlock textBlock = (TextBlock)treeViewItem.Header;
+            Image thumnailImage = (Image)((InlineUIContainer)textBlock.Inlines.FirstInline).Child;
+            BitmapImage imageSource = (BitmapImage)thumnailImage.Source;
+            return this.GetImageMetadata(imageSource);
+        }
+
+        private Dictionary<string, string> GetImageMetadata(BitmapImage bitmapImage)
+        {
+
+            Dictionary<string, string> result = new Dictionary<string, string>();
+            
+            string imagePath = bitmapImage.UriSource.AbsolutePath;
+
+            IReadOnlyList<Directory> metadataList = ImageMetadataReader.ReadMetadata(imagePath);
+            GpsDirectory gpsMetadata = ImageMetadataReader.ReadMetadata(imagePath).OfType<GpsDirectory>().FirstOrDefault();
+
+            foreach (Directory metadata in metadataList)
+            {
+                IReadOnlyList<Tag> tags = metadata.Tags;
+                foreach (Tag tag in metadata.Tags)
+                {
+                    if (!result.ContainsKey(tag.Name))
                     {
-                        metadataMap.Add($"{tag.Name}", $"{tag.Description}");
+                        result.Add(tag.Name.ToString(), tag.Description.ToString());
                     }
                 }
             }
-            return metadataMap;
+            if (gpsMetadata != null && gpsMetadata.GetGeoLocation() != null && !gpsMetadata.GetGeoLocation().IsZero)
+            {
+                result.Add("Latitude", gpsMetadata.GetGeoLocation().Latitude.ToString());
+                result.Add("Longitude", gpsMetadata.GetGeoLocation().Longitude.ToString());
+            }
+            return result;
         }
 
-        private BitmapImage GetLocalImage(string imagePath)
+        private BitmapImage LoadLocalImage(string imagePath)
         {
             BitmapImage bitmapImage = new BitmapImage();
             try
@@ -159,24 +184,43 @@ namespace ExtremeEnviroment.Module.ImageList
                 throw e;
             }
             return bitmapImage;
+        }
 
+        private void RefreshRelativeControls()
+        {
+            MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
+
+            // Redraw map markers
+            mainWindow.MapViewer.Clear();
+            this.imageDataList.ForEach(imageData => {
+                Dictionary<string, string> imageProps = imageData.ImageProps;
+                if (imageProps.ContainsKey("Latitude") && imageProps.ContainsKey("Longitude"))
+                {
+                    mainWindow.MapViewer.DrawMarker(double.Parse(imageProps.GetValueOrDefault("Latitude")), double.Parse(imageProps.GetValueOrDefault("Longitude")));
+                }
+            });
         }
 
         // Tree DoubleClick Handler
         private void OnTreeViewItemDoubleClick(object sender, RoutedEventArgs e)
         {
-            BitmapImage bitmapImage = this.SelectedItemImage;
-            if(bitmapImage != null)
+            ImageData selectedImageData = this.SelectedImageData;
+            if(selectedImageData != null)
             {
                 MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
                 // set imageview
                 ImageViewControl imageViewControl = mainWindow.GetImageViewControl();
-                imageViewControl.SetImageSource(bitmapImage);
+                imageViewControl.SetImageSource(selectedImageData.Image);
 
                 // set imagePropView
                 ImagePropViewControl imagePropViewControl =  mainWindow.GetImagePropViewControl();
-                string imageAbsolutePath = bitmapImage.UriSource.AbsolutePath;
-                imagePropViewControl.SetImageProps(this.GetImageMetadata(imageAbsolutePath));
+                Dictionary<string, string> imageMetadata = selectedImageData.ImageProps;
+                imagePropViewControl.SetImageProps(imageMetadata);
+
+                if (imageMetadata.ContainsKey("Latitude") && imageMetadata.ContainsKey("Longitude"))
+                {
+                    mainWindow.MapViewer.DrawMarker(double.Parse(imageMetadata.GetValueOrDefault("Latitude")), double.Parse(imageMetadata.GetValueOrDefault("Longitude")));
+                }
             }
         }
 
@@ -192,19 +236,19 @@ namespace ExtremeEnviroment.Module.ImageList
             Nullable<bool> result = openFileDialog.ShowDialog();
             if (result == true)
             {
-                string[] fileNames = openFileDialog.FileNames;
-                foreach (string fileName in fileNames)
+                string[] fileAbsolutePaths = openFileDialog.FileNames;
+                foreach (string fileAbsolutePath in fileAbsolutePaths)
                 {
-                    this.AddItem(fileName);
+                    this.AddItem(fileAbsolutePath);
                 }
             }
         }
         // Remove Button Handler
         private void BtnRemoveItem_Click(object sender, RoutedEventArgs e)
         {
-            if (this.SelectedItem != null)
+            if (this.ImageTree.SelectedItem != null)
             {
-                this.ImageTree.Items.Remove(this.SelectedItem);
+                this.ImageTree.Items.Remove(this.ImageTree.SelectedItem);
                 // TODO: 삭제되는 아이템이랑 연결된 컨트롤도 초기화 필요
             }
         }
@@ -215,7 +259,7 @@ namespace ExtremeEnviroment.Module.ImageList
             {
                 foreach (KeyValuePair<string, string> keyValuePair in metadataMap)
                 {
-                    if (keyValuePair.Key.IndexOf("Unknown tag") < 0)
+                    if (!keyValuePair.Key.Contains("Unknown tag"))
                     {
                         treeViewItem.Items.Add(new TreeViewItem { Header = $"[{keyValuePair.Key}]{keyValuePair.Value}" });
                     }
