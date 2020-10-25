@@ -17,6 +17,7 @@
         <Button DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="23" Width="Auto" Name="button5">저장</Button>
         <GroupBox Header="Data" VerticalAlignment="Stretch">
             <DataGrid x:Name="DgInspector"
+                      ItemsSource="{Binding CurrentInspectorItems}"
                       IsReadOnly="True"
                       AutoGenerateColumns="False"
                       HorizontalAlignment="Stretch"

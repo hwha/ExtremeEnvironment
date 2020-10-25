@@ -12,6 +12,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data;
 using System.Security.Cryptography;
+using ExtremeEnviroment.Model;
+using System.Collections;
+using System.Collections.ObjectModel;
 
 namespace ExtremeEnviroment.Module.ImageInspector
 {
@@ -20,43 +23,59 @@ namespace ExtremeEnviroment.Module.ImageInspector
     /// </summary>
     public partial class ImageInspectorControl : UserControl
     {
+        public ObservableCollection<InspectorItem> currentInspectorItems;
+        public ObservableCollection<InspectorItem> CurrentInspectorItems {
+            get { return this.currentInspectorItems; }
+        }
+
         public InspectorItem SelectedItem;
         public ImageInspectorControl()
         {
             InitializeComponent();
+            currentInspectorItems = new ObservableCollection<InspectorItem>();
         }
-        public void AddRow(int index, InspectorItem item)
-        {
-            ItemCollection inspectorItems = DgInspector.Items;
-            item.INDEX = index;
-            item.NUM = inspectorItems.Count + 1;
-            inspectorItems.Add(item);
-        }
+
         public void AddRow(int index, Dictionary<string, int> row)
         {
-            ItemCollection inspectorItems = DgInspector.Items;
-
-            InspectorItem inspectorItem = new InspectorItem(row)
-            {
-                INDEX = index,
-                NUM = inspectorItems.Count + 1
-            };
-
-            inspectorItems.Add(inspectorItem);
+            this.AddRow(index, new InspectorItem(row));
         }
-        public void AddRow(int idx, int numPixel, string pixel)
+
+        public void AddRow(int index, int numPixel, string pixel)
         {
-            ItemCollection inspectorItems = DgInspector.Items;
             string[] split = pixel.Split(",");
-            inspectorItems.Add(new InspectorItem {
-                INDEX = idx,
-                NUM = inspectorItems.Count+1,
+            this.AddRow(index, new InspectorItem
+            {
                 INSPECTOR = "영역",
                 NUM_PIXEL = numPixel,
                 AVG_TEMP = split[0],
                 MAX_TEMP = split[1],
                 MIN_TEMP = split[2]
             });
+        }
+
+        public void AddRow(int index, InspectorItem item)
+        {
+            item.INDEX = index;
+            item.NUM = DgInspector.Items.Count + 1;
+            currentInspectorItems.Add(item);
+            this.RefreshDataGrid();
+
+            MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
+         
+            ImageData imageData = mainWindow.CurrentImageData;
+            imageData.InspectorItems = (ObservableCollection<InspectorItem>)DgInspector.ItemsSource;
+        }
+
+        public void SetIspectItemList(ObservableCollection<InspectorItem> inspectorItems)
+        {
+            this.currentInspectorItems = inspectorItems;
+            this.RefreshDataGrid();
+        }
+
+        private void RefreshDataGrid()
+        {
+            this.DgInspector.ItemsSource = null;
+            this.DgInspector.ItemsSource = this.currentInspectorItems;
         }
 
         private void DgInspectorMouseDoubleClick(object sender, MouseButtonEventArgs e)
