@@ -15,6 +15,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ExtremeEnviroment.Module.ImageInspector;
+using ExtremeEnviroment.Model;
 
 namespace ExtremeEnviroment
 {
@@ -41,6 +43,11 @@ namespace ExtremeEnviroment
             _mainWindow = this;
         }
 
+        internal ImageData CurrentImageData
+        {
+            get { return this.ImageList.GetCurrentImageData()}
+        }
+
         internal ImageViewControl GetImageViewControl()
         {
             return this.ImageViewer;
@@ -54,6 +61,11 @@ namespace ExtremeEnviroment
         internal ImageListControl GetImageListControl()
         {
             return this.ImageList;
+        }
+
+        internal ImageInspectorControl GetImageInspectorControl()
+        {
+            return this.ImageInspector;
         }
     }
 }

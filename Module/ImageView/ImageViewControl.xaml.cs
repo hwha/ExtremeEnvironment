@@ -146,7 +146,7 @@ namespace ExtremeEnviroment.Module.ImageView
                 row.Add("Y", (int)this.startPoint.Y);
                 row.Add("Width", (int)this.currentRectangle.Width);
                 row.Add("Height", (int)this.currentRectangle.Height);
-                ExtremeEnviroment.MainWindow._mainWindow.ImageInspector.AddRow(index, row);
+                ExtremeEnviroment.MainWindow._mainWindow.GetImageInspectorControl().AddRow(index, row);
                 imageCanvas.Children.Remove(this.currentRectangle);
                 Mouse.Capture(null);
             }

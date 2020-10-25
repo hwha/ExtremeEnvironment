@@ -24,6 +24,9 @@ using MessageBox = System.Windows.MessageBox;
 using UserControl = System.Windows.Controls.UserControl;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using System.Linq;
+using ExtremeEnviroment.Module.ImageInspector;
+using System.Collections;
+using System.Collections.ObjectModel;
 
 namespace ExtremeEnviroment.Module.ImageList
 {
@@ -33,6 +36,7 @@ namespace ExtremeEnviroment.Module.ImageList
     public partial class ImageListControl : UserControl
     {
         public List<ImageData> imageDataList;
+        public ImageData currentImage;
 
         public ImageListControl()
         {
@@ -58,7 +62,8 @@ namespace ExtremeEnviroment.Module.ImageList
                     return null;
                 }
 
-                ImageData imageData = this.imageDataList.Find(data => data.ImageTreeViewItem == this.ImageTree.SelectedItem);
+                ImageData imageData = this.imageDataList.Find(data => 
+                    data.ImageTreeViewItem == this.ImageTree.SelectedItem);
                 if (imageData == null)
                 {
                     return null;
@@ -72,6 +77,11 @@ namespace ExtremeEnviroment.Module.ImageList
             return this.imageDataList;
         }
 
+        public ImageData GetCurrentImageData()
+        {
+            return this.currentImage;
+        }
+
         private TreeViewItem AddItem(string imagePath)
         {
             return this.AddItem(this.LoadLocalImage(imagePath));
@@ -81,22 +91,7 @@ namespace ExtremeEnviroment.Module.ImageList
         {
             if (bitmapImage != null)
             {
-                TreeViewItem imageTreeViewItem = new TreeViewItem();
-                string imageAbsolutePath = bitmapImage.UriSource.AbsolutePath;
-                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(imageAbsolutePath);
-                
-                Image iconImage = new Image
-                {
-                    Source = bitmapImage,
-                    Width = 16,
-                    Height = 16
-                };
-
-                TextBlock textBlock = new TextBlock();
-                textBlock.Inlines.Add(iconImage);
-                textBlock.Inlines.Add(fileNameWithoutExtension);
-                imageTreeViewItem.Header = textBlock;
-
+                TreeViewItem imageTreeViewItem = this.CreateTreeViewItem(bitmapImage);
                 this.ImageTree.Items.Add(imageTreeViewItem);
 
                 // append metadata tree
@@ -108,16 +103,35 @@ namespace ExtremeEnviroment.Module.ImageList
                 {
                     ImageTreeViewItem = imageTreeViewItem,
                     Image = bitmapImage,
-                    ImageName = Path.GetFileName(imageAbsolutePath),
+                    ImageName = Path.GetFileName(bitmapImage.UriSource.AbsolutePath),
                     ImageProps = metaData
                 };
                 this.imageDataList.Add(imageData);
-
                 this.RefreshRelativeControls();
 
                 return imageTreeViewItem;
             }
             return null;
+        }
+
+        private TreeViewItem CreateTreeViewItem(BitmapImage bitmapImage) {
+            TreeViewItem newItem = new TreeViewItem();
+            string imageAbsolutePath = bitmapImage.UriSource.AbsolutePath;
+            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(imageAbsolutePath);
+
+            Image iconImage = new Image
+            {
+                Source = bitmapImage,
+                Width = 16,
+                Height = 16
+            };
+
+            TextBlock textBlock = new TextBlock();
+            textBlock.Inlines.Add(iconImage);
+            textBlock.Inlines.Add(fileNameWithoutExtension);
+            newItem.Header = textBlock;
+
+            return newItem;
         }
 
         public bool UpdateTreeItem(Dictionary<string, string> imageProps) 
@@ -191,35 +205,35 @@ namespace ExtremeEnviroment.Module.ImageList
             MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
 
             // Redraw map markers
-            mainWindow.MapViewer.Clear();
-            this.imageDataList.ForEach(imageData => {
-                Dictionary<string, string> imageProps = imageData.ImageProps;
-                if (imageProps.ContainsKey("Latitude") && imageProps.ContainsKey("Longitude"))
-                {
-                    mainWindow.MapViewer.DrawMarker(double.Parse(imageProps.GetValueOrDefault("Latitude")), double.Parse(imageProps.GetValueOrDefault("Longitude")));
-                }
-            });
+            mainWindow.MapViewer.Refresh();
         }
 
         // Tree DoubleClick Handler
         private void OnTreeViewItemDoubleClick(object sender, RoutedEventArgs e)
         {
-            ImageData selectedImageData = this.SelectedImageData;
-            if(selectedImageData != null)
+            this.currentImage = this.SelectedImageData;
+            if(currentImage != null)
             {
                 MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
                 // set imageview
                 ImageViewControl imageViewControl = mainWindow.GetImageViewControl();
-                imageViewControl.SetImageSource(selectedImageData.Image);
+                imageViewControl.SetImageSource(currentImage.Image);
 
                 // set imagePropView
                 ImagePropViewControl imagePropViewControl =  mainWindow.GetImagePropViewControl();
-                Dictionary<string, string> imageMetadata = selectedImageData.ImageProps;
-                imagePropViewControl.SetImageProps(imageMetadata);
+                imagePropViewControl.SetImageProps(currentImage.ImageProps);
 
-                if (imageMetadata.ContainsKey("Latitude") && imageMetadata.ContainsKey("Longitude"))
+                // set imageInspector
+                if(currentImage.InspectorItems == null || currentImage.InspectorItems.Count == 0)
                 {
-                    mainWindow.MapViewer.DrawMarker(double.Parse(imageMetadata.GetValueOrDefault("Latitude")), double.Parse(imageMetadata.GetValueOrDefault("Longitude")));
+                    currentImage.InspectorItems = new ObservableCollection<InspectorItem>();
+                }
+                ImageInspectorControl imageInspectorControl = mainWindow.GetImageInspectorControl();
+                imageInspectorControl.SetIspectItemList(currentImage.InspectorItems);
+
+                if (currentImage.ImageProps.ContainsKey("Latitude") && currentImage.ImageProps.ContainsKey("Longitude"))
+                {
+                    mainWindow.MapViewer.DrawMarker(double.Parse(currentImage.ImageProps.GetValueOrDefault("Latitude")), double.Parse(currentImage.ImageProps.GetValueOrDefault("Longitude")));
                 }
             }
         }
