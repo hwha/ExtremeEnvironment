@@ -45,7 +45,7 @@ namespace ExtremeEnviroment
 
         internal ImageData CurrentImageData
         {
-            get { return this.ImageList.GetCurrentImageData()}
+            get { return this.ImageList.GetCurrentImageData(); }
         }
 
         internal ImageViewControl GetImageViewControl()
