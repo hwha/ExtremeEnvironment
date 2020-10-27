@@ -61,6 +61,7 @@ namespace ExtremeEnviroment.Module.ImageView
         {
             this.locationText.Text = "0 x 0";
         }
+
         private void BgImage_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -79,9 +80,9 @@ namespace ExtremeEnviroment.Module.ImageView
                 imageCanvas.Children.Add(this.currentRectangle);
                 Canvas.SetLeft(this.currentRectangle, startPoint.X);
                 Canvas.SetTop(this.currentRectangle, startPoint.Y);
-
             }
         }
+
         private void BgImage_MouseMove(object sender, MouseEventArgs e)
         {
             Point posOnImage = e.GetPosition(this.imageCanvas);
@@ -114,7 +115,9 @@ namespace ExtremeEnviroment.Module.ImageView
             if (0 < posOnImage.X && posOnImage.X <= bgImageWidth
                 && posOnImage.Y > 0 && posOnImage.Y <= bgImageHeight)
             {
-                if (e.LeftButton == MouseButtonState.Pressed && this.currentRectangle != null)
+                ImageInspectorControl imageInspectorControl = ExtremeEnviroment.MainWindow._mainWindow.GetImageInspectorControl();
+
+                if (e.LeftButton == MouseButtonState.Pressed && this.currentRectangle != null && imageInspectorControl.IsArea())
                 {
                     Point pos = e.GetPosition(this.imageCanvas);
                     double x = Math.Min(pos.X, startPoint.X);

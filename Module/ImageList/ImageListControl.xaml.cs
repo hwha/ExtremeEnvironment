@@ -134,13 +134,32 @@ namespace ExtremeEnviroment.Module.ImageList
             return newItem;
         }
 
-        public bool UpdateTreeItem(Dictionary<string, string> imageProps) 
+        public bool SetTreeItem(Dictionary<string, string> imageProps)
         {
-            if(this.SelectedImageData == null || imageProps == null)
+            if (this.currentImage == null || imageProps == null)
             {
                 return false;
             }
-            this.SelectedImageData.ImageProps = imageProps;
+            this.currentImage.ImageProps = imageProps;
+            this.RefreshRelativeControls();
+            return true;
+        }
+
+        public bool UpdateTreeItem(string key, string value)
+        {
+            if (this.currentImage == null || key == null || key.Equals(""))
+            {
+                return false;
+            }
+
+            if (this.currentImage.ImageProps.ContainsKey(key))
+            {
+                this.currentImage.ImageProps[key] = value;
+            }
+            else
+            {
+                this.currentImage.ImageProps.Add(key, value);
+            }
             this.RefreshRelativeControls();
             return true;
         }
@@ -200,10 +219,29 @@ namespace ExtremeEnviroment.Module.ImageList
             return bitmapImage;
         }
 
+        private void RefreshImageTree()
+        {
+            this.ImageTree.Items.Clear();
+            if(this.imageDataList != null && this.imageDataList.Count > 0)
+            {
+                foreach (ImageData imageData in imageDataList) {
+
+                    TreeViewItem treeViewItem = imageData.ImageTreeViewItem;
+                    treeViewItem.Items.Clear();
+                    this.ImageTree.Items.Add(treeViewItem);
+
+                    // append metadata tree
+                    Dictionary<string, string> metaData = this.GetImageMetadata(treeViewItem);
+                    this.AppendMetadataToTreeItem(treeViewItem, imageData.ImageProps);
+                }
+            }
+        }
+
         private void RefreshRelativeControls()
         {
             MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
-
+            // Refresh ImageList
+            this.RefreshImageTree();
             // Redraw map markers
             mainWindow.MapViewer.Refresh();
         }
