@@ -10,8 +10,8 @@
     <DockPanel>
             <GroupBox Height="50" DockPanel.Dock="Top" Header="Inspector 선택" VerticalAlignment="Top">
                 <StackPanel Orientation="Horizontal">
-                    <RadioButton Content="영역" Tag="AREA" IsChecked="True"/>
-                    <RadioButton Content="픽셀" Tag="PIXEL" />
+                    <RadioButton x:Name="areaRadio" Content="영역" Tag="AREA" IsChecked="True"/>
+                    <RadioButton x:Name="pixelRadio" Content="픽셀" Tag="PIXEL" />
                 </StackPanel>
             </GroupBox>
         <Button DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="23" Width="Auto" Name="button5">저장</Button>

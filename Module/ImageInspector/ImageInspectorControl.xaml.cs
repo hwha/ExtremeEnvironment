@@ -35,6 +35,11 @@ namespace ExtremeEnviroment.Module.ImageInspector
             currentInspectorItems = new ObservableCollection<InspectorItem>();
         }
 
+        public Boolean IsArea()
+        {
+            return this.areaRadio.IsChecked == true;
+        }
+
         public void AddRow(int index, Dictionary<string, int> row)
         {
             this.AddRow(index, new InspectorItem(row));

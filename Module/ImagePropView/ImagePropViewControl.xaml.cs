@@ -60,9 +60,7 @@ namespace ExtremeEnviroment.Module.ImagePropView
             {
                 ImageListControl imageListControl = mainWindow.GetImageListControl();
 
-                Dictionary<string, string> metadataMap = new Dictionary<string, string>();
-                metadataMap.Add(props.Text, value.Text);
-                imageListControl.UpdateTreeItem(metadataMap);
+                imageListControl.UpdateTreeItem(props.Text, value.Text);
             }
         }
 
