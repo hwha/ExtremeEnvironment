@@ -27,6 +27,9 @@ using System.Linq;
 using ExtremeEnviroment.Module.ImageInspector;
 using System.Collections;
 using System.Collections.ObjectModel;
+using System.Net.Security;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 
 namespace ExtremeEnviroment.Module.ImageList
 {
@@ -116,8 +119,8 @@ namespace ExtremeEnviroment.Module.ImageList
 
         private TreeViewItem CreateTreeViewItem(BitmapImage bitmapImage) {
             TreeViewItem newItem = new TreeViewItem();
-            string imageAbsolutePath = bitmapImage.UriSource.AbsolutePath;
-            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(imageAbsolutePath);
+            string imagePath = bitmapImage.UriSource.OriginalString;
+            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(imagePath);
 
             Image iconImage = new Image
             {
@@ -177,7 +180,7 @@ namespace ExtremeEnviroment.Module.ImageList
 
             Dictionary<string, string> result = new Dictionary<string, string>();
             
-            string imagePath = bitmapImage.UriSource.AbsolutePath;
+            string imagePath = bitmapImage.UriSource.OriginalString;
 
             IReadOnlyList<Directory> metadataList = ImageMetadataReader.ReadMetadata(imagePath);
             GpsDirectory gpsMetadata = ImageMetadataReader.ReadMetadata(imagePath).OfType<GpsDirectory>().FirstOrDefault();
