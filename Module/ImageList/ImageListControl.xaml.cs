@@ -301,10 +301,13 @@ namespace ExtremeEnviroment.Module.ImageList
         // Remove Button Handler
         private void BtnRemoveItem_Click(object sender, RoutedEventArgs e)
         {
-            if (this.ImageTree.SelectedItem != null)
+            if (this.SelectedImageData != null)
             {
-                this.ImageTree.Items.Remove(this.ImageTree.SelectedItem);
+                ImageData selectedImageData = this.SelectedImageData;
+                this.ImageTree.Items.Remove(selectedImageData.ImageTreeViewItem);
+                this.imageDataList.Remove(selectedImageData);
                 // TODO: 삭제되는 아이템이랑 연결된 컨트롤도 초기화 필요
+                this.RefreshRelativeControls();
             }
         }
 
