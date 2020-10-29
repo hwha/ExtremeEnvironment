@@ -191,9 +191,9 @@ namespace ExtremeEnviroment.Module.ImageView
                 {
                     sum += pixelBuffer[i];
                 }
-                resultDict.Add("AVG_TEMP", sum / pixelBuffer.Length);
-                resultDict.Add("MAX_TEMP", sum / pixelBuffer.Length);
-                resultDict.Add("MIN_TEMP", sum / pixelBuffer.Length);
+                resultDict.Add("AVG_TEMP", pixelBuffer.Length > 0 ? sum / pixelBuffer.Length : 0);
+                resultDict.Add("MAX_TEMP", pixelBuffer.Length > 0 ? sum / pixelBuffer.Length : 0);
+                resultDict.Add("MIN_TEMP", pixelBuffer.Length > 0 ? sum / pixelBuffer.Length : 0);
             }
             else
             {
@@ -216,9 +216,9 @@ namespace ExtremeEnviroment.Module.ImageView
                         sumCount++;
                     }
                 }
-                resultDict.Add("AVG_TEMP", red / sumCount);
-                resultDict.Add("MAX_TEMP", green / sumCount);
-                resultDict.Add("MIN_TEMP", red / sumCount);
+                resultDict.Add("AVG_TEMP", sumCount > 0 ? red / sumCount : 0);
+                resultDict.Add("MAX_TEMP", sumCount > 0 ? green / sumCount : 0);
+                resultDict.Add("MIN_TEMP", sumCount > 0 ? red / sumCount : 0);
             }
 
             return resultDict;
