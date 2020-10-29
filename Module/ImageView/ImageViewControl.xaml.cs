@@ -72,7 +72,9 @@ namespace ExtremeEnviroment.Module.ImageView
                 Rectangle newRectangle = new Rectangle
                 {
                     Stroke = Brushes.Red,
-                    StrokeThickness = 1
+                    StrokeThickness = 1,
+                    Width = 1,
+                    Height = 1
                 };
                 this.currentRectangle = newRectangle;
                 this.rectangleList.Add(newRectangle);
@@ -117,7 +119,7 @@ namespace ExtremeEnviroment.Module.ImageView
             {
                 ImageInspectorControl imageInspectorControl = ExtremeEnviroment.MainWindow._mainWindow.GetImageInspectorControl();
 
-                if (e.LeftButton == MouseButtonState.Pressed && this.currentRectangle != null && imageInspectorControl.IsArea())
+                if (e.LeftButton == MouseButtonState.Pressed && this.currentRectangle != null && imageInspectorControl.CheckedArea())
                 {
                     Point pos = e.GetPosition(this.imageCanvas);
                     double x = Math.Min(pos.X, startPoint.X);
@@ -137,7 +139,11 @@ namespace ExtremeEnviroment.Module.ImageView
         }
         private void BgImage_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if(this.currentRectangle != null)
+            MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
+            
+            ImageInspectorControl imageInspectorControl = mainWindow.GetImageInspectorControl();
+            
+            if (this.currentRectangle != null)
             {
                 int index = this.rectangleList.IndexOf(this.currentRectangle);
                 int width = (int)this.currentRectangle.Width;
@@ -149,10 +155,14 @@ namespace ExtremeEnviroment.Module.ImageView
                 row.Add("Y", (int)this.startPoint.Y);
                 row.Add("Width", (int)this.currentRectangle.Width);
                 row.Add("Height", (int)this.currentRectangle.Height);
-                ExtremeEnviroment.MainWindow._mainWindow.GetImageInspectorControl().AddRow(index, row);
+                mainWindow.GetImageInspectorControl().AddRow(index, row);
+
                 imageCanvas.Children.Remove(this.currentRectangle);
                 Mouse.Capture(null);
             }
+            
+            
+            
         }
         private void BgImage_MouseLeave(object sender, MouseEventArgs e)
         {

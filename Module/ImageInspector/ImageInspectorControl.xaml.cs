@@ -35,9 +35,14 @@ namespace ExtremeEnviroment.Module.ImageInspector
             currentInspectorItems = new ObservableCollection<InspectorItem>();
         }
 
-        public Boolean IsArea()
+        public Boolean CheckedArea()
         {
             return this.areaRadio.IsChecked == true;
+        }
+
+        public Boolean CheckedPixel()
+        {
+            return this.pixelRadio.IsChecked == true;
         }
 
         public void AddRow(int index, Dictionary<string, int> row)
