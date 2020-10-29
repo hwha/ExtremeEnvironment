@@ -1,6 +1,9 @@
 ﻿using ExtremeEnviroment.Module.ImageList;
 using ExtremeEnviroment.Module.ImageView;
 using ExtremeEnviroment.Module.ImagePropView;
+using ExtremeEnviroment.Module.ImageInspector;
+using ExtremeEnviroment.Module.DataList;
+using ExtremeEnviroment.Module.ChartView;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +18,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using ExtremeEnviroment.Module.ImageInspector;
-using ExtremeEnviroment.Module.DataList;
 using ExtremeEnviroment.Model;
 
 namespace ExtremeEnviroment
@@ -73,5 +74,11 @@ namespace ExtremeEnviroment
         {
             return this.DataList;
         }
+
+        internal ChartViewControl GetChartViewControl()
+        {
+            return this.ChartView;
+        }
+
     }
 }

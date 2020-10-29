@@ -15,6 +15,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.ObjectModel;
 using ExtremeEnviroment.Module.ImageInspector;
+using ExtremeEnviroment.Module.ChartView;
 using ExtremeEnviroment.Model;
 
 namespace ExtremeEnviroment.Module.DataList
@@ -48,7 +49,7 @@ namespace ExtremeEnviroment.Module.DataList
                 }
 
                 currentDataListItems.Add(imageData.DataListItem);
-
+                ExtremeEnviroment.MainWindow._mainWindow.GetChartViewControl().RefreshChart(this.currentDataListItems);
             }
             this.RefreshDataGrid();
         }

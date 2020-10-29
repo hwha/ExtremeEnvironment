@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ExtremeEnviroment.Module.DataList;
+using System.Collections.ObjectModel;
 
 namespace ExtremeEnviroment.Module.ChartView
 {
@@ -28,30 +30,35 @@ namespace ExtremeEnviroment.Module.ChartView
         {
             Smooth, Straight
         }
-
         public ChartViewControl()
         {
             InitializeComponent();
-            InitControl();
+
+            this.SeriesCollection = new SeriesCollection();
+            this.Labels = new[] { "Avg Temp", "Max Temp", "Min Temp", "Std Dev" };
+            this.YFormatter = value => value + "°";
+            DataContext = this;
         }
 
-        private void InitControl()
+        public void addDataList(string fileName, List<double> ChartData)
         {
-            this.SeriesCollection = new SeriesCollection();
+            this.AddLineSeries(fileName, ChartData, LineSmooth.Straight);
+        }
 
-            this.AddLineSeries("Series 1", new List<double> { 4, 6, 5, 2, 4 }, LineSmooth.Straight);
-            this.AddLineSeries("Series 2", new List<double> { 6, 7, 3, 4, 6 }, LineSmooth.Straight);
-            this.AddLineSeries("Series 3", new List<double> { 4, 2, 7, 2, 7 }, LineSmooth.Straight);
-            this.AddLineSeries("Series 4", new List<double> { 5, 3, 2, 4 }, LineSmooth.Smooth);
+        public void RefreshChart(ObservableCollection<DataListItem> dataListItems)
+        {
+            this.SeriesCollection.Clear();
 
-            this.Labels = new[] { "Jan", "Feb", "Mar", "Apr", "May" };
-            this.YFormatter = value => value.ToString("C");
+            foreach (DataListItem dataListItem in dataListItems)
+            {
 
-            //modifying any series values will also animate and update the chart
-            SeriesCollection[3].Values.Add(5d);
-
-            DataContext = this;
-
+                string fileName = dataListItem.FILE_NAME;
+                double avgTemp = Convert.ToDouble(dataListItem.AVG_TEMP);
+                double maxTemp = Convert.ToDouble(dataListItem.MAX_TEMP);
+                double minTemp = Convert.ToDouble(dataListItem.MIN_TEMP);
+                double stdDev = Convert.ToDouble(dataListItem.STD_DEV);
+                this.addDataList(fileName, new List<double> { avgTemp, maxTemp, minTemp, stdDev });
+            }
         }
 
         public bool AddLineSeries(string title, List<double> values, LineSmooth lineSmooth)
@@ -68,13 +75,14 @@ namespace ExtremeEnviroment.Module.ChartView
                 this.SeriesCollection.Add(lineSeries);
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 return false;
             }
         }
 
-        
+
     }
+
 }
