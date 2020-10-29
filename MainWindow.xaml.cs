@@ -80,5 +80,10 @@ namespace ExtremeEnviroment
             return this.ChartView;
         }
 
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            System.Windows.Application.Current.Shutdown();
+        }
+
     }
 }
