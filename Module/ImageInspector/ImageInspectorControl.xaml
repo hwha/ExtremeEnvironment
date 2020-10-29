@@ -27,16 +27,23 @@
                       MouseDoubleClick="DgInspectorMouseDoubleClick">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Index" Binding="{Binding Path=INDEX}" Visibility="Hidden"/>
-                    <DataGridTextColumn Header="번호" Binding="{Binding Path=NUM}"/>
-                    <DataGridTextColumn Header="구분" Binding="{Binding Path=INSPECTOR}"/>
-                    <DataGridTextColumn Header="픽셀 수" Binding="{Binding Path=NUM_PIXEL}"/>
-                    <DataGridTextColumn Header="평균 온도" Binding="{Binding Path=AVG_TEMP}"/>
-                    <DataGridTextColumn Header="최저 온도" Binding="{Binding Path=MIN_TEMP}"/>
-                    <DataGridTextColumn Header="최대 온도" Binding="{Binding Path=MAX_TEMP}"/>
+                    <DataGridTextColumn Header="번호" Binding="{Binding Path=NUM}" Width="0.5*" />
+                    <DataGridTextColumn Header="구분" Binding="{Binding Path=INSPECTOR}" Width="0.5*" />
+                    <DataGridTextColumn Header="픽셀 수" Binding="{Binding Path=NUM_PIXEL}" Width="2*" />
+                    <DataGridTextColumn Header="평균 온도" Binding="{Binding Path=AVG_TEMP}" Width="2*" />
+                    <DataGridTextColumn Header="최저 온도" Binding="{Binding Path=MIN_TEMP}" Width="2*" />
+                    <DataGridTextColumn Header="최대 온도" Binding="{Binding Path=MAX_TEMP}" Width="2*" />
                     <DataGridTextColumn Binding="{Binding Path=x}" Visibility="Hidden"/>
                     <DataGridTextColumn Binding="{Binding Path=y}" Visibility="Hidden"/>
                     <DataGridTextColumn Binding="{Binding Path=width}" Visibility="Hidden"/>
                     <DataGridTextColumn Binding="{Binding Path=height}" Visibility="Hidden"/>
+                    <DataGridTemplateColumn Header="삭제">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="X" Click="BtbClick_Delete"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </GroupBox>

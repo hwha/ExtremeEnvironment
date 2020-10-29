@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ExtremeEnviroment.Module.ImageInspector;
+using ExtremeEnviroment.Module.DataList;
 using ExtremeEnviroment.Model;
 
 namespace ExtremeEnviroment
@@ -66,6 +67,11 @@ namespace ExtremeEnviroment
         internal ImageInspectorControl GetImageInspectorControl()
         {
             return this.ImageInspector;
+        }
+
+        internal DataListControl GetDatListControl()
+        {
+            return this.DataList;
         }
     }
 }

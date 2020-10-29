@@ -25,6 +25,7 @@ using UserControl = System.Windows.Controls.UserControl;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using System.Linq;
 using ExtremeEnviroment.Module.ImageInspector;
+using ExtremeEnviroment.Module.DataList;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Net.Security;
@@ -107,8 +108,18 @@ namespace ExtremeEnviroment.Module.ImageList
                     ImageTreeViewItem = imageTreeViewItem,
                     Image = bitmapImage,
                     ImageName = Path.GetFileName(bitmapImage.UriSource.AbsolutePath),
-                    ImageProps = metaData
+                    ImageProps = metaData,
+                    DataListItem = new DataListItem
+                    {
+                        FILE_NAME = Path.GetFileName(bitmapImage.UriSource.AbsolutePath),
+                        NUM_PIXEL = 0,
+                        AVG_TEMP = "0",
+                        MAX_TEMP = "0",
+                        MIN_TEMP = "0",
+                        STD_DEV = "0"
+                    }
                 };
+
                 this.imageDataList.Add(imageData);
                 this.RefreshRelativeControls();
 
@@ -247,6 +258,8 @@ namespace ExtremeEnviroment.Module.ImageList
             this.RefreshImageTree();
             // Redraw map markers
             mainWindow.MapViewer.Refresh();
+            // Refresh DataListGrid
+            this.RefreshDataListGrid();
         }
 
         // Tree DoubleClick Handler
@@ -320,6 +333,12 @@ namespace ExtremeEnviroment.Module.ImageList
                     }
                 }
             }
+        }
+
+        public void RefreshDataListGrid()
+        {
+            // Refresh DataListGrid
+            ExtremeEnviroment.MainWindow._mainWindow.DataList.SetDataListItems(this.imageDataList);
         }
     }
 }

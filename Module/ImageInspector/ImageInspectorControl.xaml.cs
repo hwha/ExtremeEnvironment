@@ -69,6 +69,9 @@ namespace ExtremeEnviroment.Module.ImageInspector
          
             ImageData imageData = mainWindow.CurrentImageData;
             imageData.InspectorItems = (ObservableCollection<InspectorItem>)DgInspector.ItemsSource;
+
+            // Refresh DataListGrid
+            ExtremeEnviroment.MainWindow._mainWindow.GetImageListControl().RefreshDataListGrid();
         }
 
         public void SetIspectItemList(ObservableCollection<InspectorItem> inspectorItems)
@@ -94,6 +97,21 @@ namespace ExtremeEnviroment.Module.ImageInspector
                     ExtremeEnviroment.MainWindow._mainWindow.ImageViewer.DrawRectangle(selectedItem.X, selectedItem.Y, selectedItem.Width, selectedItem.Height);
                 }
             }
+        }
+               
+        private void BtbClick_Delete(object sender, RoutedEventArgs e)
+        {
+            InspectorItem selectedItem = (InspectorItem)this.DgInspector.SelectedItem;
+            currentInspectorItems.Remove(selectedItem);
+            this.RefreshDataGrid();
+
+            MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
+
+            ImageData imageData = mainWindow.CurrentImageData;
+            imageData.InspectorItems = (ObservableCollection<InspectorItem>)DgInspector.ItemsSource;
+
+            // Refresh DataListGrid
+            ExtremeEnviroment.MainWindow._mainWindow.GetImageListControl().RefreshDataListGrid();
         }
     }
 

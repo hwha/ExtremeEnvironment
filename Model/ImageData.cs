@@ -1,4 +1,5 @@
 ﻿using ExtremeEnviroment.Module.ImageInspector;
+using ExtremeEnviroment.Module.DataList;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,5 +16,6 @@ namespace ExtremeEnviroment.Model
         public string ImageName { get; set; }
         public Dictionary<string, string> ImageProps { get; set; }
         public ObservableCollection<InspectorItem> InspectorItems { get; set; }
+        public DataListItem DataListItem { get; set; }
     }
 }

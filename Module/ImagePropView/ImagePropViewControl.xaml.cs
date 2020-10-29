@@ -106,16 +106,15 @@ namespace ExtremeEnviroment.Module.ImagePropView
             if (edtiedCellIndex == 0)
             {
                 TextBox prop = e.EditingElement as TextBox;
-                TextBlock value = DgImageProp.Columns[1].GetCellContent(DgImageProp.Items[e.Row.GetIndex()]) as TextBlock;
 
-                if (currentPropsItem.Any(d => d.PROP == prop.Text)) 
+                if (currentPropsItem.Any(d => d.PROP == prop.Text))
                 {
                     MessageBox.Show("동일한 속성이 존재합니다.", "Notice", MessageBoxButton.OK, MessageBoxImage.Information);
                     this.RefreshDataGrid();
                     return;
                 }
 
-                if (prop != null && value != null)
+                if (prop != null && DgImageProp.Columns[1].GetCellContent(DgImageProp.Items[e.Row.GetIndex()]) is TextBlock value)
                 {
                     editedPropsItem = new PropsItem
                     {
@@ -127,9 +126,7 @@ namespace ExtremeEnviroment.Module.ImagePropView
             }
             else if (edtiedCellIndex == 1)
             {
-                TextBlock prop = DgImageProp.Columns[0].GetCellContent(DgImageProp.Items[e.Row.GetIndex()]) as TextBlock;
-                TextBox value = e.EditingElement as TextBox;
-                if (prop != null && value != null)
+                if (DgImageProp.Columns[0].GetCellContent(DgImageProp.Items[e.Row.GetIndex()]) is TextBlock prop && e.EditingElement is TextBox value)
                 {
                     editedPropsItem = new PropsItem
                     {
@@ -143,24 +140,35 @@ namespace ExtremeEnviroment.Module.ImagePropView
             {
                 
                 this.UpdateRow(e.Row.GetIndex(), editedPropsItem);
-                this.updateTreeItem();
+                this.UpdateTreeItem();
             }
 
         }
 
-        private void btbClick_Delete(object sender, RoutedEventArgs e)
+        private void BtbClick_Delete(object sender, RoutedEventArgs e)
         {
-            var selectedItems = DgImageProp.SelectedItems.Cast<PropsItem>().ToList();
-
-            foreach (PropsItem item in selectedItems)
+            try
             {
-                currentPropsItem.Remove(item);
+                var selectedItems = DgImageProp.SelectedItems.Cast<PropsItem>().ToList();
+
+                foreach (PropsItem item in selectedItems)
+                {
+                    currentPropsItem.Remove(item);
+                }
             }
-            this.RefreshDataGrid();
-            this.updateTreeItem();
+            catch (Exception)
+            {
+                System.Diagnostics.Debug.WriteLine("Unable to cast the selecte item.");
+            }
+            finally
+            {
+                this.RefreshDataGrid();
+                this.UpdateTreeItem();
+            }
+            
         }
 
-        private void updateTreeItem() 
+        private void UpdateTreeItem() 
         {
             MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
             ImageListControl imageListControl = mainWindow.GetImageListControl();

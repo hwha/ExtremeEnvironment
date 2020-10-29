@@ -11,6 +11,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data;
+using System.Linq;
+using System.Collections;
+using System.Collections.ObjectModel;
+using ExtremeEnviroment.Module.ImageInspector;
+using ExtremeEnviroment.Model;
 
 namespace ExtremeEnviroment.Module.DataList
 {
@@ -19,28 +24,90 @@ namespace ExtremeEnviroment.Module.DataList
     /// </summary>
     public partial class DataListControl : UserControl
     {
+        public ObservableCollection<DataListItem> currentDataListItems;
+        public ObservableCollection<DataListItem> CurrentDataListItems
+        {
+            get { return this.currentDataListItems; }
+        }
+
         public DataListControl()
         {
             InitializeComponent();
+            currentDataListItems = new ObservableCollection<DataListItem>();
         }
 
-        private void DgDataList_Loaded(object sender, RoutedEventArgs e)
+        public void SetDataListItems(List<ImageData> imageDataList)
         {
-            DataTable dataTable = new DataTable();
+            this.currentDataListItems = new ObservableCollection<DataListItem>();
 
-            dataTable.Columns.Add("NUM", typeof(int));
-            dataTable.Columns.Add("NUM_PIXEL", typeof(int));
-            dataTable.Columns.Add("AVG_TEMP", typeof(float));
-            dataTable.Columns.Add("MAX_TEMP", typeof(float));
-            dataTable.Columns.Add("MIN_TEMP", typeof(float));
-            dataTable.Columns.Add("STD_TEMP", typeof(float));
+            foreach (ImageData imageData in imageDataList)
+            {
+                if (imageData.InspectorItems != null && imageData.InspectorItems.Count > 0)
+                {
+                    imageData.DataListItem = this.UpdateDataList(imageData.DataListItem.FILE_NAME, imageData.InspectorItems);
+                }
 
-            dataTable.Rows.Add(new object[] { "1", "25", "32.123", "49.092", "21.112", "0.928" });
-            dataTable.Rows.Add(new object[] { "2", "1", "20.121", "20.121", "20.121", "0.928" });
-            dataTable.Rows.Add(new object[] { "3", "1", "29.982", "29.982", "29.982", "0.928" });
-            dataTable.Rows.Add(new object[] { "4", "25", "32.123", "49.092", "21.112", "0.928" });
+                currentDataListItems.Add(imageData.DataListItem);
 
-            DgDataList.ItemsSource = dataTable.DefaultView;
+            }
+            this.RefreshDataGrid();
+        }
+
+        public DataListItem UpdateDataList(string fileName, ObservableCollection<InspectorItem> inspectorItems)
+        {
+            int NumPixel = inspectorItems.Sum(data => data.NUM_PIXEL);
+            double AvgTemp = inspectorItems.Average(data => Convert.ToDouble(data.AVG_TEMP));
+            double MaxTemp = inspectorItems.Max(data => Convert.ToDouble(data.MAX_TEMP));
+            double MinTemp = inspectorItems.Min(data => Convert.ToDouble(data.MIN_TEMP));
+            double StdDev = 0;
+            return this.UpdateDataList(fileName, NumPixel, AvgTemp.ToString(), MaxTemp.ToString(), MinTemp.ToString(), StdDev.ToString());
+        }
+
+        public DataListItem UpdateDataList(string fileName, int numPixel, string avgTemp, string maxTemp, string minTemp, string stdDev)
+        {
+            return new DataListItem
+            {
+                FILE_NAME = fileName,
+                NUM_PIXEL = numPixel,
+                AVG_TEMP = avgTemp,
+                MAX_TEMP = maxTemp,
+                MIN_TEMP = minTemp,
+                STD_DEV = stdDev
+            };
+        }
+
+        private void RefreshDataGrid()
+        {
+            this.DgDataList.ItemsSource = null;
+            this.DgDataList.ItemsSource = this.currentDataListItems;
+        }
+
+    }
+
+    public class DataListItem
+    {
+        public DataListItem()
+        {
+        }
+        public DataListItem(Dictionary<string, int> keyValuePairs)
+        {
+            this.FromDictionary(keyValuePairs);
+        }
+        public string FILE_NAME { get; set; }
+        public int NUM_PIXEL { get; set; }
+        public string AVG_TEMP { get; set; }
+        public string MAX_TEMP { get; set; }
+        public string MIN_TEMP { get; set; }
+        public string STD_DEV { get; set; }
+
+        public void FromDictionary(Dictionary<string, int> keyValuePairs)
+        {
+            this.FILE_NAME = keyValuePairs.GetValueOrDefault("FILE_NAME").ToString();
+            this.NUM_PIXEL = keyValuePairs.GetValueOrDefault("NUM_PIXEL");
+            this.AVG_TEMP = keyValuePairs.GetValueOrDefault("AVG_TEMP").ToString();
+            this.MAX_TEMP = keyValuePairs.GetValueOrDefault("MAX_TEMP").ToString();
+            this.MIN_TEMP = keyValuePairs.GetValueOrDefault("MIN_TEMP").ToString();
+            this.STD_DEV = keyValuePairs.GetValueOrDefault("STD_DEV").ToString();
         }
     }
 }

@@ -8,14 +8,21 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <DockPanel>
         <GroupBox Header="수온추출결과" VerticalAlignment="Stretch">
-            <DataGrid x:Name="DgDataList" Loaded="DgDataList_Loaded" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto">
+            <DataGrid x:Name="DgDataList" 
+                      ItemsSource="{Binding CurrentDataListItems}"
+                      IsReadOnly="True"
+                      AutoGenerateColumns="False"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch"
+                      Height="Auto"
+                      Width="Auto">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="번호" Binding="{Binding Path=NUM}" Width="1*"/>
-                    <DataGridTextColumn Header="픽셀 수" Binding="{Binding Path=NUM_PIXEL}" Width="1.8*"/>
-                    <DataGridTextColumn Header="평균 온도" Binding="{Binding Path=AVG_TEMP}" Width="1.8*"/>
-                    <DataGridTextColumn Header="최대 온도" Binding="{Binding Path=MAX_TEMP}" Width="1.8*"/>
-                    <DataGridTextColumn Header="최저 온도" Binding="{Binding Path=MIN_TEMP}" Width="1.8*"/>
-                    <DataGridTextColumn Header="표준편차" Binding="{Binding Path=STD_TEMP}" Width="1.8*"/>
+                    <DataGridTextColumn Header="이미지명" Binding="{Binding Path=FILE_NAME}" Width="2*"/>
+                    <DataGridTextColumn Header="픽셀 수" Binding="{Binding Path=NUM_PIXEL}" Width="1.6*"/>
+                    <DataGridTextColumn Header="평균온도" Binding="{Binding Path=AVG_TEMP}" Width="1.6*"/>
+                    <DataGridTextColumn Header="최대온도" Binding="{Binding Path=MAX_TEMP}" Width="1.6*"/>
+                    <DataGridTextColumn Header="최저온도" Binding="{Binding Path=MIN_TEMP}" Width="1.6*"/>
+                    <DataGridTextColumn Header="표준편차" Binding="{Binding Path=STD_DEV}" Width="1.6*"/>
                 </DataGrid.Columns>
             </DataGrid>
         </GroupBox>

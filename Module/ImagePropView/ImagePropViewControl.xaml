@@ -23,7 +23,7 @@
                     <DataGridTemplateColumn Header="삭제">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="X" Click="btbClick_Delete"/>
+                                <Button Content="X" Click="BtbClick_Delete"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
