@@ -19,7 +19,7 @@
         </Grid.RowDefinitions>
         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" Grid.Row="1">
             <Button x:Name="BtnNewProject" Content="새 프로젝트 만들기" Click="BtnNewProject_Click"  Margin="10" Height="40"/>
-            <Button x:Name="BtnLoadProject" Content="프로젝트 열기" Margin="10" Height="40"/>
+            <Button x:Name="BtnLoadProject" Content="프로젝트 열기" Click="BtnLoadProject_Click" Margin="10" Height="40"/>
         </StackPanel>
     </Grid>
 </Window>

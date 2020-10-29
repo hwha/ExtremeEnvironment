@@ -29,6 +29,8 @@ namespace ExtremeEnviroment
     {
         readonly private String _projectName;
 
+        readonly private ProjectData _projectData;
+
         public static MainWindow _mainWindow;
 
         public string MainWindowTitle
@@ -43,6 +45,23 @@ namespace ExtremeEnviroment
             DataContext = this;
             _projectName = projectName;
             _mainWindow = this;
+        }
+        public MainWindow(String projectName, ProjectData projectData)
+        {
+            InitializeComponent();
+            DataContext = this;
+            _projectName = projectName;
+            _projectData = projectData;
+            _mainWindow = this;
+            this.LoadProjectData();
+        }
+
+        private void LoadProjectData()
+        {
+            if (_projectData != null)
+            {
+                this.ImageList.LoadProjectDataList(this._projectData.images);
+            }
         }
 
         internal ImageData CurrentImageData

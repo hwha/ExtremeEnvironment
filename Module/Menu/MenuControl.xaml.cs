@@ -34,8 +34,8 @@ namespace ExtremeEnviroment.Module.Menu
         {
             MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
             String projectName = mainWindow.MainWindowTitle;
-            String appProjectDataPath = CommonUtils.GetProjectDataPath(projectName);
-            String appProjectImageDataPath = CommonUtils.GetProjectImageDataPath(projectName);
+            String appProjectDataPath = CommonUtils.GetProjectDataFolderPath(projectName);
+            String appProjectImageDataPath = CommonUtils.GetProjectImageDataFolderPath(projectName);
 
             if (mainWindow != null)
             {
@@ -67,8 +67,11 @@ namespace ExtremeEnviroment.Module.Menu
 
                     ProjectImage projectImage = new ProjectImage();
                     projectImage.index = ImageDataList.IndexOf(imageData);
-                    projectImage.imageName = imageData.ImageName;
-                    projectImage.metadata = imageData.ImageProps;
+                    projectImage.ImageName = imageData.ImageName;
+                    projectImage.ImageProps = imageData.ImageProps;
+                    //projectImage.ImageTreeViewItem = imageData.ImageTreeViewItem;
+                    projectImage.InspectorItems = imageData.InspectorItems;
+                    projectImage.DataListItem = imageData.DataListItem;
                     projectImageList.Add(projectImage);
 
                 }

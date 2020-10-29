@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
+using ExtremeEnviroment.Module.ImageInspector;
+using ExtremeEnviroment.Module.DataList;
+using System.Collections.ObjectModel;
 
 namespace ExtremeEnviroment.Model
 {
@@ -11,9 +16,13 @@ namespace ExtremeEnviroment.Model
 
     public class ProjectImage
     {
-        public string imageName { get; set; }
         public int index { get; set; }
 
-        public Dictionary<string, string> metadata { get; set; }
+        public TreeViewItem ImageTreeViewItem { get; set; }
+        public BitmapImage Image { get; set; }
+        public string ImageName { get; set; }
+        public Dictionary<string, string> ImageProps { get; set; }
+        public ObservableCollection<InspectorItem> InspectorItems { get; set; }
+        public DataListItem DataListItem { get; set; }
     }
 }

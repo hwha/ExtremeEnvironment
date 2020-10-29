@@ -33,32 +33,20 @@ namespace ExtremeEnviroment.Module.ChartView
         public ChartViewControl()
         {
             InitializeComponent();
+            this.SetChart();
+        }
 
+        private void SetChart()
+        {
             this.SeriesCollection = new SeriesCollection();
             this.Labels = new[] { "Avg Temp", "Max Temp", "Min Temp", "Std Dev" };
             this.YFormatter = value => value + "°";
             DataContext = this;
         }
 
-        public void addDataList(string fileName, List<double> ChartData)
+        public void AddDataList(string fileName, List<double> ChartData)
         {
             this.AddLineSeries(fileName, ChartData, LineSmooth.Straight);
-        }
-
-        public void RefreshChart(ObservableCollection<DataListItem> dataListItems)
-        {
-            this.SeriesCollection.Clear();
-
-            foreach (DataListItem dataListItem in dataListItems)
-            {
-
-                string fileName = dataListItem.FILE_NAME;
-                double avgTemp = Convert.ToDouble(dataListItem.AVG_TEMP);
-                double maxTemp = Convert.ToDouble(dataListItem.MAX_TEMP);
-                double minTemp = Convert.ToDouble(dataListItem.MIN_TEMP);
-                double stdDev = Convert.ToDouble(dataListItem.STD_DEV);
-                this.addDataList(fileName, new List<double> { avgTemp, maxTemp, minTemp, stdDev });
-            }
         }
 
         public bool AddLineSeries(string title, List<double> values, LineSmooth lineSmooth)
@@ -79,6 +67,25 @@ namespace ExtremeEnviroment.Module.ChartView
             {
                 Console.WriteLine(e.Message);
                 return false;
+            }
+        }
+
+        public void RefreshChart(ObservableCollection<DataListItem> dataListItems)
+        {
+            if (this.SeriesCollection == null)
+            {
+                this.SetChart();
+            }
+            this.SeriesCollection.Clear();
+
+            foreach (DataListItem dataListItem in dataListItems)
+            {
+                string fileName = dataListItem.FILE_NAME;
+                double avgTemp = Convert.ToDouble(dataListItem.AVG_TEMP);
+                double maxTemp = Convert.ToDouble(dataListItem.MAX_TEMP);
+                double minTemp = Convert.ToDouble(dataListItem.MIN_TEMP);
+                double stdDev = Convert.ToDouble(dataListItem.STD_DEV);
+                this.AddDataList(fileName, new List<double> { avgTemp, maxTemp, minTemp, stdDev });
             }
         }
 

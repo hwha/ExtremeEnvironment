@@ -31,6 +31,7 @@ using System.Collections.ObjectModel;
 using System.Net.Security;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
+using ExtremeEnviroment.Utils;
 
 namespace ExtremeEnviroment.Module.ImageList
 {
@@ -46,6 +47,27 @@ namespace ExtremeEnviroment.Module.ImageList
         {
             InitializeComponent();
             imageDataList = new List<ImageData>();
+        }
+
+        public void LoadProjectDataList(List<ProjectImage> LoadedProjectDataList)
+        {
+            imageDataList = new List<ImageData>();
+
+            foreach (ProjectImage projectImage in LoadedProjectDataList)
+            {
+                BitmapImage bitmapImage= this.LoadLocalImage(CommonUtils.GetProjectImageFilePath(CommonUtils.GetProjectName(), projectImage.ImageName));
+                imageDataList.Add(new ImageData
+                {
+                    ImageTreeViewItem = this.CreateTreeViewItem(bitmapImage),
+                    Image = bitmapImage,
+                    ImageName = projectImage.ImageName,
+                    ImageProps = projectImage.ImageProps,
+                    InspectorItems = projectImage.InspectorItems,
+                    DataListItem = projectImage.DataListItem
+                });
+            }
+
+            this.RefreshRelativeControls();
         }
 
         public ImageData SelectedImageData
@@ -159,25 +181,6 @@ namespace ExtremeEnviroment.Module.ImageList
             return true;
         }
 
-        public bool UpdateTreeItem(string key, string value)
-        {
-            if (this.currentImage == null || key == null || key.Equals(""))
-            {
-                return false;
-            }
-
-            if (this.currentImage.ImageProps.ContainsKey(key))
-            {
-                this.currentImage.ImageProps[key] = value;
-            }
-            else
-            {
-                this.currentImage.ImageProps.Add(key, value);
-            }
-            this.RefreshRelativeControls();
-            return true;
-        }
-
         private Dictionary<string, string> GetImageMetadata(TreeViewItem treeViewItem)
         {
             TextBlock textBlock = (TextBlock)treeViewItem.Header;
@@ -216,7 +219,7 @@ namespace ExtremeEnviroment.Module.ImageList
         }
 
         private BitmapImage LoadLocalImage(string imagePath)
-        {
+        {            
             BitmapImage bitmapImage = new BitmapImage();
             try
             {

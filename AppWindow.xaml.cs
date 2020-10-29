@@ -9,6 +9,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.IO;
+using ExtremeEnviroment.Model;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using Newtonsoft.Json;
 
 namespace ExtremeEnviroment
 {
@@ -26,6 +30,38 @@ namespace ExtremeEnviroment
         {
             NewProjectWindow newProjectWindow = new NewProjectWindow(this);
             if (newProjectWindow.ShowDialog() == true) { }
+        }
+
+        private void BtnLoadProject_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog()
+            {
+                Multiselect = false,
+                Filter = "Image Files|*.data"
+            };
+
+            Nullable<bool> result = openFileDialog.ShowDialog();
+            if (result == true)
+            {
+                ProjectData loadedProjectData = null;
+                string fileAbsolutePath = openFileDialog.FileName;
+
+                using (StreamReader r = new StreamReader(fileAbsolutePath))
+                {
+                    string json = r.ReadToEnd();
+                    loadedProjectData = JsonConvert.DeserializeObject<ProjectData>(json);
+                }
+
+                if (loadedProjectData != null)
+                {
+                    string[] split = openFileDialog.SafeFileName.Split(".");
+
+                    this.Hide();
+                    MainWindow mainWindow = new MainWindow(split[0], loadedProjectData);
+                    mainWindow.Show();
+                }
+                
+            }
         }
     }
 }

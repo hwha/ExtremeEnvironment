@@ -6,24 +6,34 @@ namespace ExtremeEnviroment.Utils
 {
     class CommonUtils
     {
+
+        public static String GetProjectName()
+        {
+           return ExtremeEnviroment.MainWindow._mainWindow.MainWindowTitle;
+        }
         public static String GetAppPath() 
         {
             return AppDomain.CurrentDomain.BaseDirectory;
         }
 
         public static String GetDataPath()
-        { 
-            return GetAppPath() + @"\data";
+        {
+            return GetAppPath() + "data";
         }
 
-        public static String GetProjectDataPath(String projectName)
+        public static String GetProjectDataFolderPath(String projectName)
         {
             return GetDataPath() + "\\" + projectName;
         }
 
-        public static String GetProjectImageDataPath(String projectName)
+        public static String GetProjectImageDataFolderPath(String projectName)
         {
-            return GetProjectDataPath(projectName) + @"\images";
+            return GetProjectDataFolderPath(projectName) + @"\images";
+        }
+
+        public static String GetProjectImageFilePath(String projectName, string fileName)
+        {            
+            return GetProjectImageDataFolderPath(projectName) + "\\" + fileName;
         }
     }
 }

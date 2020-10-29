@@ -49,8 +49,8 @@ namespace ExtremeEnviroment.Module.DataList
                 }
 
                 currentDataListItems.Add(imageData.DataListItem);
-                ExtremeEnviroment.MainWindow._mainWindow.GetChartViewControl().RefreshChart(this.currentDataListItems);
             }
+            ExtremeEnviroment.MainWindow._mainWindow.GetChartViewControl().RefreshChart(this.currentDataListItems);
             this.RefreshDataGrid();
         }
 
