@@ -14,7 +14,7 @@
                     <RadioButton x:Name="pixelRadio" Content="픽셀" Tag="PIXEL" />
                 </StackPanel>
             </GroupBox>
-        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="23" Width="Auto" Name="button5">저장</Button>
+        <!-- <Button DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="23" Width="Auto" Name="button5">저장</Button> -->
         <GroupBox Header="Data" VerticalAlignment="Stretch">
             <DataGrid x:Name="DgInspector"
                       ItemsSource="{Binding CurrentInspectorItems}"

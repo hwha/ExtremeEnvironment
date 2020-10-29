@@ -64,9 +64,7 @@
         <MapView:MapViewControl x:Name="MapViewer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="4" Grid.Row="2" />
         <ImagePropView:ImagePropViewControl x:Name="ImagePropView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="4" Grid.Row="3" />
         <DataList:DataListControl x:Name="DataList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" />
-        <ChartView:ChartViewControl  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="5"  />
-
-        <Button Grid.Column="4" Grid.Row="5" Content="결과 저장"/>
+        <ChartView:ChartViewControl  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="5"  />
 
     </Grid>
 </Window>
