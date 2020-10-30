@@ -21,9 +21,19 @@ namespace ExtremeEnviroment.Utils
             return GetAppPath() + "data";
         }
 
+        public static String GetLoadedProjecListPath()
+        {
+            return GetDataPath() + "\\projectlist.data";
+        }
+
         public static String GetProjectDataFolderPath(String projectName)
         {
             return GetDataPath() + "\\" + projectName;
+        }
+
+        public static String GetProjectDataFilePath(String projectName)
+        {
+            return GetDataPath() + "\\" + projectName + "\\" + projectName + ".data";
         }
 
         public static String GetProjectImageDataFolderPath(String projectName)

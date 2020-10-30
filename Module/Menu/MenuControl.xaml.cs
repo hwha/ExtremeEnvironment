@@ -16,6 +16,7 @@ using System.Linq;
 using ExtremeEnviroment.Utils;
 using ExtremeEnviroment.Model;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ExtremeEnviroment.Module.Menu
 {
@@ -30,25 +31,40 @@ namespace ExtremeEnviroment.Module.Menu
             InitializeComponent();
         }
 
-        private void Save_Click(object sender, RoutedEventArgs e)
+        public void SaveProjectData()
         {
             MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
             String projectName = mainWindow.MainWindowTitle;
             String appProjectDataPath = CommonUtils.GetProjectDataFolderPath(projectName);
             String appProjectImageDataPath = CommonUtils.GetProjectImageDataFolderPath(projectName);
 
+            ProjectData projectData = this.GetCurrentProjectData(appProjectImageDataPath);
+
+            using (StreamWriter file = File.CreateText(appProjectDataPath + "\\" + projectName + ".data"))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                //serialize object directly into file stream
+                serializer.Serialize(file, projectData);
+            }
+        }
+
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            this.SaveProjectData();
+        }
+
+        private ProjectData GetCurrentProjectData(string appProjectImageDataPath)
+        {            
+            ProjectData projectData = new ProjectData();
+
+            MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
             if (mainWindow != null)
             {
                 ImageListControl imgeListControl = mainWindow.GetImageListControl();
                 List<ImageData> ImageDataList = imgeListControl.GetImageDataList();
                 DirectoryInfo appImageDataDirectory = new DirectoryInfo(appProjectImageDataPath);
 
-                if (ImageDataList.Count == 0)
-                {
-                    return;
-                }
-
-                if (!appImageDataDirectory.Exists) 
+                if (!appImageDataDirectory.Exists)
                 {
                     Directory.CreateDirectory(appProjectImageDataPath);
                 }
@@ -75,18 +91,37 @@ namespace ExtremeEnviroment.Module.Menu
                     projectImageList.Add(projectImage);
 
                 }
-
-
-                ProjectData projectData = new ProjectData();
+                
                 projectData.images = projectImageList;
-
-                using (StreamWriter file = File.CreateText(appProjectDataPath + "\\" + projectName + ".data"))
-                {
-                    JsonSerializer serializer = new JsonSerializer();
-                    //serialize object directly into file stream
-                    serializer.Serialize(file, projectData);
-                }
             }
+            return projectData;
+        }
+
+
+        public Boolean hasModifiedContents()
+        {
+            MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
+            String projectName = mainWindow.MainWindowTitle;
+            String appProjectDataPath = CommonUtils.GetProjectDataFolderPath(projectName);
+            String appProjectImageDataPath = CommonUtils.GetProjectImageDataFolderPath(projectName);
+
+            ProjectData projectData = this.GetCurrentProjectData(appProjectImageDataPath);
+
+
+            string projectDataFileAbsolutePath = CommonUtils.GetProjectDataFilePath(CommonUtils.GetProjectName());
+            ProjectData lastSavedProjectData;
+
+            using (StreamReader r = new StreamReader(projectDataFileAbsolutePath))
+                {
+                string json = r.ReadToEnd();
+                lastSavedProjectData = JsonConvert.DeserializeObject<ProjectData>(json);
+            }
+
+            //if (JToken.DeepEquals(projectData, lastSavedProjectData))
+            //{
+            //    return true;
+            //}
+            return false;
         }
     }
 }

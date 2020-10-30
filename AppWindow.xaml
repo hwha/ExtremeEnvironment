@@ -8,18 +8,70 @@
         Title="AppWindow" Height="450" Width="800">
     <Grid x:Name="mainPanel" d:IsLocked="True">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2.5*"/>
-            <ColumnDefinition Width="5*"/>
-            <ColumnDefinition Width="2.5*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>
-            <RowDefinition Height="6*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="5*"/>
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
-        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" Grid.Row="1">
-            <Button x:Name="BtnNewProject" Content="새 프로젝트 만들기" Click="BtnNewProject_Click"  Margin="10" Height="40"/>
-            <Button x:Name="BtnLoadProject" Content="프로젝트 열기" Click="BtnLoadProject_Click" Margin="10" Height="40"/>
+        <TextBlock DockPanel.Dock="Top" Text="Extreme Environment" FontSize="25" FontWeight="Bold" Margin="20, 0, 0, 0" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" />
+        <TextBlock DockPanel.Dock="Top" Text="최근 프로젝트 열기" FontSize="18" FontWeight="Bold" Margin="20, 0, 0, 0"  Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" />
+        <TextBlock DockPanel.Dock="Top" Text="시작" FontSize="18" FontWeight="Bold" Margin="20, 0, 0, 0"  Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="2" Grid.Row="1" />
+        <ScrollViewer Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="2" VerticalScrollBarVisibility="Auto">
+            <GroupBox Header="프로젝트 목록" Margin="20, 0, 0, 20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <ItemsControl x:Name="LoadedProjectItemControl">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="2" Grid.Row="2"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Margin="10" Height="35" Width="400" HorizontalAlignment="Left" Background="White" BorderThickness="0" Tag="{Binding PROJECT_NAME}" Click="BtnLoadSingleProject_Click">
+                                <ContentControl>
+                                    <DockPanel>
+                                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" VerticalAlignment="Center" >
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Width="250" DockPanel.Dock="Left" VerticalAlignment="Center">
+                                            <TextBlock DockPanel.Dock="Left" Text="{Binding PROJECT_NAME}" FontSize="13" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Width="150" DockPanel.Dock="Right" VerticalAlignment="Center">
+                                            <TextBlock DockPanel.Dock="Right" Text="{Binding LOAD_DATETIME}" FontSize="9" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </DockPanel>
+                                </ContentControl>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+
+                </ItemsControl>
+
+                
+            </GroupBox>
+        </ScrollViewer>
+        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="2" Grid.Row="2">
+            <Button x:Name="BtnLoadProject" Click="BtnLoadProject_Click" Margin="10" Height="55" HorizontalAlignment="Stretch">
+                <ContentControl>
+                    <DockPanel>
+                        <Image DockPanel.Dock="Left" Source="Resources/toolbar/OpenFolder_16x.png" Width="20" Height="20" Margin="-50, 0, 20, 0" VerticalAlignment="Center" />
+                        <TextBlock DockPanel.Dock="Top" Text="프로젝트 열기" FontSize="15" FontWeight="Bold" Height="25" />
+                        <TextBlock DockPanel.Dock="Bottom" Text="저장된 로컬 프로젝트 열기" VerticalAlignment="Bottom" Height="18" />
+                    </DockPanel>
+                </ContentControl>                
+            </Button>
+            <Button x:Name="BtnNewProject" Click="BtnNewProject_Click" Margin="10" Height="55" HorizontalAlignment="Stretch">
+                <ContentControl>
+                    <DockPanel>
+                        <Image DockPanel.Dock="Left" Source="Resources/toolbar/NewFileCollection_16x.png" Width="20" Height="20" Margin="-40, 0, 20, 0" VerticalAlignment="Center" />
+                        <TextBlock DockPanel.Dock="Top" Text="새 프로젝트 만들기" FontSize="15" FontWeight="Bold" Height="25" />
+                        <TextBlock DockPanel.Dock="Bottom" Text="새로운 프로젝트 시작" VerticalAlignment="Bottom" Height="18" />
+                    </DockPanel>
+                </ContentControl>
+            </Button>
         </StackPanel>
     </Grid>
 </Window>

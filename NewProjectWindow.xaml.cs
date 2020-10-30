@@ -60,7 +60,9 @@ namespace ExtremeEnviroment
                 {
                     Directory.CreateDirectory(projectDataPath);
                     this.Close();
+                    _parent.SaveLoadedProject(newProjectName);
                     _parent.Hide();
+
 
                     MainWindow mainWindow = new MainWindow(newProjectName);
                     mainWindow.Show();
