@@ -4,6 +4,7 @@ using ExtremeEnviroment.Module.ImagePropView;
 using ExtremeEnviroment.Module.ImageInspector;
 using ExtremeEnviroment.Module.DataList;
 using ExtremeEnviroment.Module.ChartView;
+using ExtremeEnviroment.Module.Menu;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -99,8 +100,22 @@ namespace ExtremeEnviroment
             return this.ChartView;
         }
 
+        internal MenuControl GetMenuControl()
+        {
+            return this.Menu;
+        }
+
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+            if (this.Menu.hasModifiedContents())
+            {
+                if (MessageBox.Show("변경된 내용이 있습니다. 저장하시겠습니까?", "Alert", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+                {
+                    this.Menu.SaveProjectData();
+                }
+
+            }
+
             System.Windows.Application.Current.Shutdown();
         }
 

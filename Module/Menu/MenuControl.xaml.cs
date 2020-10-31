@@ -132,10 +132,7 @@ namespace ExtremeEnviroment.Module.Menu
 
 
             bool result = new Comparator<ProjectData>().Equals(projectData, lastSavedProjectData);
-
-
-            System.Diagnostics.Debug.WriteLine(result);
-            return result;
+            return !result;
         }
 
         private class Comparator<T> : IEqualityComparer<T>

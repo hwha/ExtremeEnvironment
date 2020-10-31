@@ -36,11 +36,12 @@ namespace ExtremeEnviroment
         {
             LoadedProjectList loadedProjectList = null;
 
+            if (!File.Exists(CommonUtils.GetLoadedProjecListPath())) { return; }
+
             using (StreamReader r = new StreamReader(CommonUtils.GetLoadedProjecListPath()))
             {
                 string json = r.ReadToEnd();
                 loadedProjectList = JsonConvert.DeserializeObject<LoadedProjectList>(json);
-                System.Diagnostics.Debug.WriteLine("!!");
             }
 
             if (loadedProjectList == null) { return; }
@@ -89,7 +90,6 @@ namespace ExtremeEnviroment
                 using (StreamWriter file = new StreamWriter(CommonUtils.GetLoadedProjecListPath(), false))
                 {
                     JsonSerializer serializer = new JsonSerializer();
-                    //serialize object directly into file stream
                     serializer.Serialize(file, loadedProjectList);
                 }
             }
@@ -150,6 +150,7 @@ namespace ExtremeEnviroment
                 {
                     string json = r.ReadToEnd();
                     loadedProjectData = JsonConvert.DeserializeObject<ProjectData>(json);
+                    r.Close();
                 }
 
                 if (loadedProjectData != null)
