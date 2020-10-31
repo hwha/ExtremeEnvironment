@@ -75,9 +75,22 @@ namespace ExtremeEnviroment.Module.Menu
                     BitmapEncoder encoder = new PngBitmapEncoder();
                     encoder.Frames.Add(BitmapFrame.Create(imageData.Image));
 
-                    using (FileStream fileStream = new System.IO.FileStream(appProjectImageDataPath + "\\" + imageData.ImageName, System.IO.FileMode.Create))
+                    string imageFilePath = appProjectImageDataPath + "\\" + imageData.ImageName;
+                    FileInfo fileInfo = new FileInfo(imageFilePath);
+
+                    if (fileInfo.Exists)
                     {
-                        encoder.Save(fileStream);
+                        using (FileStream fileStream = new System.IO.FileStream(imageFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                        {
+                            encoder.Save(fileStream);
+                        }
+                    }
+                    else
+                    {
+                        using (FileStream fileStream = new System.IO.FileStream(imageFilePath, FileMode.Create))
+                        {
+                            encoder.Save(fileStream);
+                        }
                     }
 
 
@@ -117,11 +130,25 @@ namespace ExtremeEnviroment.Module.Menu
                 lastSavedProjectData = JsonConvert.DeserializeObject<ProjectData>(json);
             }
 
-            //if (JToken.DeepEquals(projectData, lastSavedProjectData))
-            //{
-            //    return true;
-            //}
-            return false;
+
+            bool result = new Comparator<ProjectData>().Equals(projectData, lastSavedProjectData);
+
+
+            System.Diagnostics.Debug.WriteLine(result);
+            return result;
+        }
+
+        private class Comparator<T> : IEqualityComparer<T>
+        {
+            public bool Equals(T x, T y)
+            {
+                return JsonConvert.SerializeObject(x) == JsonConvert.SerializeObject(y);
+            }
+
+            public int GetHashCode(T obj)
+            {
+                return JsonConvert.SerializeObject(obj).GetHashCode();
+            }
         }
     }
 }
