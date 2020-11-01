@@ -24,7 +24,7 @@ namespace ExtremeEnviroment.Module.MapView
     /// </summary>
     public partial class MapViewControl : UserControl
     {
-        private GMapControl mapControl;
+        GMapMarker lastMarker;
         public MapViewControl()
         {
             InitializeComponent();
@@ -35,24 +35,21 @@ namespace ExtremeEnviroment.Module.MapView
         {
             GoogleMapProvider.Instance.ApiKey = "";
 
-            this.mapControl = new GMapControl();
-
             // Configuration
-            mapControl.MapProvider = GMapProviders.GoogleMap;
-            mapControl.Position = new PointLatLng(37.5665, 126.9780);
-            mapControl.Zoom = 18;
-            mapControl.MaxZoom = 24;
-            mapControl.MinZoom = 2;
-            mapControl.ShowCenter = false;
-            mapControl.DragButton = MouseButton.Left;
-
-            this.groupBox.Content = mapControl;
+            this.mapControl.MapProvider = GMapProviders.GoogleMap;
+            this.mapControl.Position = new PointLatLng(37.5665, 126.9780);
+            this.mapControl.Zoom = Convert.ToDouble(10);
+            this.mapControl.MaxZoom = 25;
+            this.mapControl.MinZoom = 0;
+            this.mapControl.ShowCenter = false;
+            this.mapControl.DragButton = MouseButton.Left;
+            this.mapControl.IgnoreMarkerOnMouseWheel = true;
         }
 
-        public void DrawMarker(double latitude, double longtitude)
+        public void DrawMarker(double latitude, double longitude)
         {
-            // this.mapControl.Markers.Clear();
-            PointLatLng point = new PointLatLng(latitude, longtitude);
+            this.mapControl.Markers.Clear();
+            PointLatLng point = new PointLatLng(latitude, longitude);
             GMapMarker marker = new GMapMarker(point)
             {
                 Shape = new Image
@@ -63,6 +60,19 @@ namespace ExtremeEnviroment.Module.MapView
                 }
             };
             this.mapControl.Markers.Add(marker);
+            this.lastMarker = marker;
+        }
+
+        public void ZoomMap(Dictionary<string, string> mapData, int zoomLevel)
+        {
+            this.ZoomMap(double.Parse(mapData.GetValueOrDefault("Latitude", "37.5665"))
+                        , double.Parse(mapData.GetValueOrDefault("Longitude", "126.9780")), zoomLevel);
+        }
+
+        public void ZoomMap(double latitude, double longitude, int zoomLevel)
+        {
+            this.mapControl.Zoom = Convert.ToDouble(zoomLevel);
+            this.mapControl.Position = new PointLatLng(latitude, longitude);
         }
 
         public void Clear()
@@ -80,8 +90,8 @@ namespace ExtremeEnviroment.Module.MapView
                 Dictionary<string, string> imageProps = imageData.ImageProps;
                 if (imageProps.ContainsKey("Latitude") && imageProps.ContainsKey("Longitude"))
                 {
-                    this.DrawMarker(double.Parse(imageProps.GetValueOrDefault("Latitude"))
-                        , double.Parse(imageProps.GetValueOrDefault("Longitude")));
+                    this.DrawMarker(double.Parse(imageProps.GetValueOrDefault("Latitude", "37.5665"))
+                        , double.Parse(imageProps.GetValueOrDefault("Longitude", "126.9780")));
                 }
             });
         }

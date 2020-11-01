@@ -20,6 +20,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ExtremeEnviroment.Model;
+using ExtremeEnviroment.Module.MapView;
 
 namespace ExtremeEnviroment
 {
@@ -103,6 +104,11 @@ namespace ExtremeEnviroment
         internal MenuControl GetMenuControl()
         {
             return this.Menu;
+        }
+
+        internal MapViewControl GetMapViewControl()
+        {
+            return this.MapViewer;
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)

@@ -290,7 +290,10 @@ namespace ExtremeEnviroment.Module.ImageList
 
                 if (currentImage.ImageProps.ContainsKey("Latitude") && currentImage.ImageProps.ContainsKey("Longitude"))
                 {
-                    mainWindow.MapViewer.DrawMarker(double.Parse(currentImage.ImageProps.GetValueOrDefault("Latitude")), double.Parse(currentImage.ImageProps.GetValueOrDefault("Longitude")));
+                    double latitude = double.Parse(currentImage.ImageProps.GetValueOrDefault("Latitude"));
+                    double longitude = double.Parse(currentImage.ImageProps.GetValueOrDefault("Longitude"));
+                    mainWindow.MapViewer.DrawMarker(latitude, longitude);
+                    mainWindow.MapViewer.ZoomMap(latitude, longitude, 15);
                 }
             }
         }

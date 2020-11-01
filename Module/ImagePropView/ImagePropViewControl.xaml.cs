@@ -170,11 +170,23 @@ namespace ExtremeEnviroment.Module.ImagePropView
 
         private void UpdateTreeItem() 
         {
+            Dictionary<string, string> currentProps = currentPropsItem.Where(d => !String.IsNullOrEmpty(d.PROP))
+                .Select(d => new PropsItem { PROP = d.PROP, VALUE = d.VALUE, INDEX = d.INDEX, NUM = d.NUM })
+                .ToDictionary(v => v.PROP, v => v.VALUE);
+            
             MainWindow mainWindow = ExtremeEnviroment.MainWindow._mainWindow;
             ImageListControl imageListControl = mainWindow.GetImageListControl();
-            imageListControl.SetTreeItem(currentPropsItem.Where(d => !String.IsNullOrEmpty(d.PROP))
-                .Select(d => new PropsItem { PROP = d.PROP, VALUE = d.VALUE, INDEX = d.INDEX, NUM = d.NUM })
-                .ToDictionary(v => v.PROP, v => v.VALUE));
+            imageListControl.SetTreeItem(currentProps);
+
+            if(this.HasMapData(currentProps))
+            {
+                mainWindow.GetMapViewControl().ZoomMap(currentProps, 15);
+            }
+        }
+
+        private Boolean HasMapData(Dictionary<string, string> currentProps)
+        {
+            return currentProps.ContainsKey("Latitude") && currentProps.ContainsKey("Longitude");
         }
     }
     public class PropsItem
