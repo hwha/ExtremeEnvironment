@@ -124,15 +124,20 @@ namespace ExtremeEnviroment.Module.Menu
             string projectDataFileAbsolutePath = CommonUtils.GetProjectDataFilePath(CommonUtils.GetProjectName());
             ProjectData lastSavedProjectData;
 
-            using (StreamReader r = new StreamReader(projectDataFileAbsolutePath))
+            bool hasModifiedContents = false;
+            if (new FileInfo(projectDataFileAbsolutePath).Exists)
+            {
+                using (StreamReader r = new StreamReader(projectDataFileAbsolutePath))
                 {
-                string json = r.ReadToEnd();
-                lastSavedProjectData = JsonConvert.DeserializeObject<ProjectData>(json);
+                    string json = r.ReadToEnd();
+                    lastSavedProjectData = JsonConvert.DeserializeObject<ProjectData>(json);
+                }
+
+
+                hasModifiedContents = new Comparator<ProjectData>().Differs(projectData, lastSavedProjectData);
             }
-
-
-            bool result = new Comparator<ProjectData>().Equals(projectData, lastSavedProjectData);
-            return !result;
+            
+            return hasModifiedContents;
         }
 
         private class Comparator<T> : IEqualityComparer<T>
@@ -140,6 +145,10 @@ namespace ExtremeEnviroment.Module.Menu
             public bool Equals(T x, T y)
             {
                 return JsonConvert.SerializeObject(x) == JsonConvert.SerializeObject(y);
+            }
+            public bool Differs(T x, T y)
+            {
+                return JsonConvert.SerializeObject(x) != JsonConvert.SerializeObject(y);
             }
 
             public int GetHashCode(T obj)

@@ -84,8 +84,11 @@ namespace ExtremeEnviroment
 
                 loadedProjectList.loadedProjectLists.Insert(0, new LoadedProject {
                     PROJECT_NAME = projectName,
-                    LOAD_DATETIME = DateTime.Now.ToString("yyyy-MMM-dd dddd, hh:mm:ss")
+                    LOAD_DATETIME = DateTime.Now.ToString("yyyy-MMM-dd dddd, HH:mm:ss")
                 });
+
+                loadedProjectList.loadedProjectLists = loadedProjectList.loadedProjectLists.GetRange(0, 10);
+
 
                 using (StreamWriter file = new StreamWriter(CommonUtils.GetLoadedProjecListPath(), false))
                 {
@@ -146,20 +149,20 @@ namespace ExtremeEnviroment
                 ProjectData loadedProjectData = null;
                 string fileAbsolutePath = CommonUtils.GetProjectDataFilePath(ProjectName);
 
-                using (StreamReader r = new StreamReader(fileAbsolutePath))
+                if (new FileInfo(fileAbsolutePath).Exists)
                 {
-                    string json = r.ReadToEnd();
-                    loadedProjectData = JsonConvert.DeserializeObject<ProjectData>(json);
-                    r.Close();
+                    using (StreamReader r = new StreamReader(fileAbsolutePath))
+                    {
+                        string json = r.ReadToEnd();
+                        loadedProjectData = JsonConvert.DeserializeObject<ProjectData>(json);
+                        r.Close();
+                        this.SaveLoadedProject(ProjectName);
+                    }
                 }
 
-                if (loadedProjectData != null)
-                {
-                    this.SaveLoadedProject(ProjectName);
-                    this.Hide();
-                    MainWindow mainWindow = new MainWindow(ProjectName, loadedProjectData);
-                    mainWindow.Show();
-                }
+                this.Hide();
+                MainWindow mainWindow = new MainWindow(ProjectName, loadedProjectData);
+                mainWindow.Show();
 
             }
         }
